@@ -131,9 +131,6 @@ export function BabyDataTable({ initial, babies }: { initial: BabyDataRow[]; bab
           </DialogContent>
         </Dialog>
         <div className="flex items-center gap-2">
-          <Label htmlFor="baby-filter" className="text-sm font-medium hidden sm:block">
-            {t("babyData.fields.baby")}
-          </Label>
           <Select value={filterBaby} onValueChange={(v) => setFilterBaby(v)}>
             <SelectTrigger id="baby-filter" className="w-40">
               <SelectValue />

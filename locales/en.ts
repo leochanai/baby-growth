@@ -115,6 +115,8 @@ export const en = {
   accountPage: {
     profile: "Profile",
     security: "Security",
+    dataPrivacy: "Data & Privacy",
+    exportAll: "Export All",
     form: {
       avatar: "Avatar",
       change: "Change",

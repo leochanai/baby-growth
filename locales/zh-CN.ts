@@ -117,6 +117,8 @@ export const zhCN: MessageSchema = {
   accountPage: {
     profile: "资料",
     security: "安全",
+    dataPrivacy: "数据与隐私",
+    exportAll: "导出全部",
     form: {
       avatar: "头像",
       change: "更换",

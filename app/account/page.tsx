@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next"
 import type { Session } from "next-auth"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { AccountProfileForm } from "@/components/account-profile-form"
 import { AccountSecurityForm } from "@/components/account-security-form"
 import { cookies } from "next/headers"
@@ -37,6 +38,19 @@ export default async function AccountPage() {
           </CardHeader>
           <CardContent>
             <AccountSecurityForm />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{dict.accountPage.dataPrivacy}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button asChild>
+                <a href="/api/export/all">{dict.accountPage.exportAll}</a>
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
