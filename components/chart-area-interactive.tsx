@@ -41,12 +41,19 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
   // Babies filtered by sex
   const groupBabies = React.useMemo(() => {
     const list = sex === "all" ? babies : babies.filter((b) => (b.gender || "").toUpperCase() === sex)
-    // When filter changes, ensure selection remains within available list
+    const listIds = list.map((b) => b.id)
+    // For "all": always select all babies
+    if (sex === "all") {
+      const same = selectedIds.length === listIds.length && selectedIds.every((id) => listIds.includes(id))
+      if (!same) setSelectedIds(listIds)
+      return list
+    }
+    // For specific sex: intersect selection with available list; if none remains, select all within the group
     const currentSet = new Set(selectedIds)
-    const intersected = list.map((b) => b.id).filter((id) => currentSet.has(id))
-    if (intersected.length !== selectedIds.length) setSelectedIds(intersected.length ? intersected : list.map((b) => b.id))
+    const intersected = listIds.filter((id) => currentSet.has(id))
+    if (intersected.length !== selectedIds.length) setSelectedIds(intersected.length ? intersected : listIds)
     return list
-  }, [babies, sex])
+  }, [babies, sex, selectedIds])
 
   // Fetch WHO medians when a gender filter is selected; hide for "all"
   React.useEffect(() => {
