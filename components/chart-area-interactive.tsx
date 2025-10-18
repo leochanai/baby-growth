@@ -68,7 +68,7 @@ export function ChartAreaInteractive({ babies, data, metric = "height" }: { babi
   }, [metric, filter])
 
   // Build pivoted dataset: one series per baby key
-  const { pivot, config, minMonth, maxMonth } = React.useMemo(() => {
+  const { pivot, config, minDomain, maxDomain, ticks } = React.useMemo(() => {
     const keys: string[] = []
     const cfg: ChartConfig = {}
     const colorPool = [210, 340, 25, 270, 140, 0, 45, 180]
@@ -96,8 +96,16 @@ export function ChartAreaInteractive({ babies, data, metric = "height" }: { babi
       keys.push("WHO")
     }
     const months = Array.from(monthsSet).sort((a, b) => a - b)
-    const minMonth = months.length ? months[0] : 0
-    const maxMonth = months.length ? months[months.length - 1] : 0
+    const babyMonths = Array.from(babyMonthsSet).sort((a, b) => a - b)
+    // Domain based solely on baby months
+    let minDomain = 0, maxDomain = 1
+    if (babyMonths.length >= 2) {
+      minDomain = babyMonths[0]
+      maxDomain = babyMonths[babyMonths.length - 1]
+    } else if (babyMonths.length === 1) {
+      minDomain = babyMonths[0] - 1
+      maxDomain = babyMonths[0] + 1
+    }
 
     const rows = months.map((m) => {
       const row: any = { month: m }
@@ -114,7 +122,7 @@ export function ChartAreaInteractive({ babies, data, metric = "height" }: { babi
       return row
     })
 
-    return { pivot: rows, config: cfg, minMonth, maxMonth }
+    return { pivot: rows, config: cfg, minDomain, maxDomain, ticks: babyMonths }
   }, [groupBabies, data, metric, who, filter])
 
   return (
@@ -142,7 +150,8 @@ export function ChartAreaInteractive({ babies, data, metric = "height" }: { babi
             <XAxis
               dataKey="month"
               type="number"
-              domain={[minMonth, maxMonth]}
+              domain={[minDomain, maxDomain]}
+              ticks={ticks}
               allowDecimals={false}
               tickLine={false}
               axisLine={false}
@@ -155,8 +164,17 @@ export function ChartAreaInteractive({ babies, data, metric = "height" }: { babi
               cursor={false}
               content={
                 <ChartTooltipContent
-                  hideLabel
                   nameKey="dataKey"
+                  labelFormatter={(_value, items) => {
+                    const m = Array.isArray(items) && items[0] && (items[0] as any).payload?.month
+                    const month = typeof m === 'number' ? m : ''
+                    return (
+                      <div className="flex items-center gap-2">
+                        <span className="text-muted-foreground">{t("babyData.fields.monthAge")}:</span>
+                        <span className="text-foreground font-mono font-medium tabular-nums">{month}{t("charts.units.month")}</span>
+                      </div>
+                    )
+                  }}
                   formatter={(value, name) => {
                     const babyName = groupBabies.find((b) => `b${b.id}` === String(name))?.name || String(name)
                     return (
