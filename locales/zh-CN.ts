@@ -35,6 +35,11 @@ export const zhCN: MessageSchema = {
       },
     },
     documents: {
+      label: "文档",
+      more: "更多",
+      open: "打开",
+      share: "分享",
+      delete: "删除",
       dataLibrary: "数据仓库",
       reports: "报表",
       wordAssistant: "文档助手",

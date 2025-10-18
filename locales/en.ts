@@ -33,6 +33,11 @@ export const en = {
       },
     },
     documents: {
+      label: "Documents",
+      more: "More",
+      open: "Open",
+      share: "Share",
+      delete: "Delete",
       dataLibrary: "Data Library",
       reports: "Reports",
       wordAssistant: "Word Assistant",
