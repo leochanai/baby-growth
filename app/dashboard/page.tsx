@@ -27,8 +27,8 @@ export default async function Page() {
   const data = (await (anyPrisma.babyData?.findMany({
     where: { baby: { userId: user.id } },
     orderBy: { monthAge: "asc" },
-    select: { id: true, babyId: true, monthAge: true, heightCm: true },
-  }) ?? Promise.resolve([]))) as { id: number; babyId: number; monthAge: number; heightCm: number }[]
+    select: { id: true, babyId: true, monthAge: true, heightCm: true, weightKg: true },
+  }) ?? Promise.resolve([]))) as { id: number; babyId: number; monthAge: number; heightCm: number; weightKg: number }[]
   return (
     <SidebarProvider
       style={
@@ -45,7 +45,10 @@ export default async function Page() {
           <div className="@container/main flex flex-1 flex-col">
             <div className="content-y stack-y flex flex-col">
               <div className="content-x">
-                <ChartAreaInteractive babies={babies} data={data} />
+                <ChartAreaInteractive babies={babies} data={data} metric="height" />
+              </div>
+              <div className="content-x">
+                <ChartAreaInteractive babies={babies} data={data} metric="weight" />
               </div>
             </div>
           </div>

@@ -80,6 +80,8 @@ export const zhCN: MessageSchema = {
   charts: {
     heightByAgeTitle: "宝宝身高图",
     heightByAgeDesc: "按月龄展示身高（cm）",
+    weightByAgeTitle: "宝宝体重图",
+    weightByAgeDesc: "按月龄展示体重（kg）",
     filters: {
       all: "全部宝宝",
       boys: "男宝宝",
@@ -87,6 +89,7 @@ export const zhCN: MessageSchema = {
     },
     units: {
       cm: "cm",
+      kg: "kg",
       month: "月",
     },
   },

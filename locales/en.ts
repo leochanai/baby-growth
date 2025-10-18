@@ -79,6 +79,8 @@ export const en = {
   charts: {
     heightByAgeTitle: "Height by Month Age",
     heightByAgeDesc: "Baby height (cm) over month age",
+    weightByAgeTitle: "Weight by Month Age",
+    weightByAgeDesc: "Baby weight (kg) over month age",
     filters: {
       all: "All Babies",
       boys: "Boys",
@@ -86,6 +88,7 @@ export const en = {
     },
     units: {
       cm: "cm",
+      kg: "kg",
       month: "mo",
     },
   },

@@ -21,14 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-export const description = "Baby height by month age"
+export const description = "Baby metric by month age"
 
 type Baby = { id: number; name: string; gender?: string }
-type Row = { id: number; babyId: number; monthAge: number; heightCm: number }
+type Row = { id: number; babyId: number; monthAge: number; heightCm: number; weightKg: number }
 
 // Config is generated dynamically per series (one per baby)
 
-export function ChartAreaInteractive({ babies, data }: { babies: Baby[]; data: Row[] }) {
+export function ChartAreaInteractive({ babies, data, metric = "height" }: { babies: Baby[]; data: Row[]; metric?: "height" | "weight" }) {
   const { t } = useI18n()
   type Filter = "all" | "MALE" | "FEMALE"
   const [filter, setFilter] = React.useState<Filter>("all")
@@ -67,19 +67,20 @@ export function ChartAreaInteractive({ babies, data }: { babies: Baby[]; data: R
       groupBabies.forEach((b) => {
         const key = byBaby.get(b.id)!
         const found = data.find((r) => r.babyId === b.id && r.monthAge === m)
-        row[key] = found?.heightCm ?? null
+        const val = metric === "height" ? found?.heightCm : found?.weightKg
+        row[key] = val ?? null
       })
       return row
     })
 
     return { pivot: rows, config: cfg }
-  }, [groupBabies, data])
+  }, [groupBabies, data, metric])
 
   return (
     <Card className="@container/card">
       <CardHeader>
-        <CardTitle>{t("charts.heightByAgeTitle")}</CardTitle>
-        <CardDescription>{t("charts.heightByAgeDesc")}</CardDescription>
+        <CardTitle>{metric === "height" ? t("charts.heightByAgeTitle") : t("charts.weightByAgeTitle")}</CardTitle>
+        <CardDescription>{metric === "height" ? t("charts.heightByAgeDesc") : t("charts.weightByAgeDesc")}</CardDescription>
         <CardAction>
           <Select value={filter} onValueChange={(v) => setFilter(v as Filter)}>
             <SelectTrigger className="w-40" size="sm" aria-label={t("charts.heightByAgeTitle")}> 
@@ -117,7 +118,7 @@ export function ChartAreaInteractive({ babies, data }: { babies: Baby[]; data: R
                     return (
                       <>
                         <span className="text-muted-foreground">{babyName}</span>
-                        <span className="text-foreground font-mono font-medium tabular-nums">{typeof value === 'number' ? value.toFixed(1) : value} {t("charts.units.cm")}</span>
+                        <span className="text-foreground font-mono font-medium tabular-nums">{typeof value === 'number' ? value.toFixed(1) : value} {metric === "height" ? t("charts.units.cm") : t("charts.units.kg")}</span>
                       </>
                     )
                   }}
