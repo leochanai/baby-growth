@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Line, LineChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { Download, ImageDown, FileDown } from "lucide-react"
+import { addMonths, format } from "date-fns"
 
 import {
   Card,
@@ -26,7 +27,7 @@ import {
 
 export const description = "Baby metric by month age"
 
-type Baby = { id: number; name: string; gender?: string }
+type Baby = { id: number; name: string; gender?: string; birthDate?: string | Date }
 type Row = { id: number; babyId: number; monthAge: number; heightCm: number; weightKg: number }
 
 export function ChartAreaInteractive({ babies, data, metric: metricProp = "height" }: { babies: Baby[]; data: Row[]; metric?: "height" | "weight" }) {
@@ -433,6 +434,15 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
                       const deltaLabel = metric === 'height'
                         ? (delta && delta > 0 ? t('charts.delta.height.high') : t('charts.delta.height.low'))
                         : (delta && delta > 0 ? t('charts.delta.weight.high') : t('charts.delta.weight.low'))
+                      // Compute calendar date per baby: birthDate + monthAge
+                      const month = (Array.isArray(item) ? undefined : (item as any)?.payload?.month) as number | undefined
+                      const baby = visibleBabies.find((b) => `b${b.id}` === String(name))
+                      const d = baby?.birthDate ? new Date(baby.birthDate) : undefined
+                      let dateText: string | null = null
+                      if (d && typeof month === 'number') {
+                        const cal = addMonths(d, month)
+                        dateText = format(cal, 'yyyy-MM-dd')
+                      }
                       return (
                         <>
                           <span className="text-muted-foreground">{babyName}</span>
@@ -442,6 +452,9 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
                           ) : null}
                           {showDelta ? (
                             <span className="text-foreground font-mono tabular-nums">{Math.abs(delta as number).toFixed(1)} {unit}</span>
+                          ) : null}
+                          {dateText ? (
+                            <span className="text-muted-foreground">· {dateText}</span>
                           ) : null}
                         </>
                       )

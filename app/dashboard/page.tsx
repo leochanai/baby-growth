@@ -22,8 +22,8 @@ export default async function Page() {
   const babies = (await (anyPrisma.baby?.findMany({
     where: { userId: user.id },
     orderBy: { createdAt: "asc" },
-    select: { id: true, name: true, gender: true },
-  }) ?? Promise.resolve([]))) as { id: number; name: string; gender: string }[]
+    select: { id: true, name: true, gender: true, birthDate: true },
+  }) ?? Promise.resolve([]))) as { id: number; name: string; gender: string; birthDate: Date }[]
   const data = (await (anyPrisma.babyData?.findMany({
     where: { baby: { userId: user.id } },
     orderBy: { monthAge: "asc" },
