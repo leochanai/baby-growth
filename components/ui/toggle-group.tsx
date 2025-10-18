@@ -28,7 +28,7 @@ function ToggleGroup({
       data-variant={variant}
       data-size={size}
       className={cn(
-        "group/toggle-group flex w-fit items-center rounded-md data-[variant=outline]:shadow-xs",
+        "group/toggle-group flex w-fit items-center rounded-sm overflow-hidden data-[variant=outline]:border data-[variant=outline]:border-input data-[variant=outline]:shadow-none",
         className
       )}
       {...props}
@@ -60,7 +60,9 @@ function ToggleGroupItem({
           variant: context.variant || variant,
           size: context.size || size,
         }),
-        "min-w-0 flex-1 shrink-0 rounded-none shadow-none first:rounded-l-md last:rounded-r-md focus:z-10 focus-visible:z-10 data-[variant=outline]:border-l-0 data-[variant=outline]:first:border-l",
+        "min-w-0 flex-1 shrink-0 rounded-none shadow-none focus:z-10 focus-visible:z-10",
+        // Connected segmented look when variant=outline: borders handled by container, add dividers only
+        "data-[variant=outline]:border-0 data-[variant=outline]:border-l data-[variant=outline]:first:border-l-0 data-[variant=outline]:border-input",
         className
       )}
       {...props}

@@ -236,21 +236,21 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
         <CardDescription>{metric === "height" ? t("charts.heightByAgeDesc") : t("charts.weightByAgeDesc")}</CardDescription>
         <CardAction className="flex items-center gap-2">
           {/* Sex segmented control */}
-          <ToggleGroup type="single" value={sex} onValueChange={(v) => v && setSex(v as SexFilter)} size="sm" className="border-input bg-transparent">
-            <ToggleGroupItem value="all" aria-label={t("charts.filters.all")} className="data-[state=on]:bg-accent data-[state=on]:text-accent-foreground">
+          <ToggleGroup type="single" variant="outline" value={sex} onValueChange={(v) => v && setSex(v as SexFilter)} size="sm" className="bg-transparent">
+            <ToggleGroupItem value="all" aria-label={t("charts.filters.all")} className="data-[state=on]:bg-accent/60 data-[state=on]:text-accent-foreground hover:bg-accent/40">
               {t("charts.filters.all")}
             </ToggleGroupItem>
-            <ToggleGroupItem value="MALE" aria-label={t("charts.filters.boys")}>
+            <ToggleGroupItem value="MALE" aria-label={t("charts.filters.boys")} className="data-[state=on]:bg-accent/60 data-[state=on]:text-accent-foreground hover:bg-accent/40">
               {t("charts.filters.boys")}
             </ToggleGroupItem>
-            <ToggleGroupItem value="FEMALE" aria-label={t("charts.filters.girls")}>
+            <ToggleGroupItem value="FEMALE" aria-label={t("charts.filters.girls")} className="data-[state=on]:bg-accent/60 data-[state=on]:text-accent-foreground hover:bg-accent/40">
               {t("charts.filters.girls")}
             </ToggleGroupItem>
           </ToggleGroup>
           {/* Metric segmented control */}
-          <ToggleGroup type="single" value={metric} onValueChange={(v) => v && setMetric(v as any)} size="sm" className="border-input bg-transparent">
-            <ToggleGroupItem value="height">{t("charts.metric.height")}</ToggleGroupItem>
-            <ToggleGroupItem value="weight">{t("charts.metric.weight")}</ToggleGroupItem>
+          <ToggleGroup type="single" variant="outline" value={metric} onValueChange={(v) => v && setMetric(v as any)} size="sm" className="bg-transparent">
+            <ToggleGroupItem value="height" className="data-[state=on]:bg-accent/60 data-[state=on]:text-accent-foreground hover:bg-accent/40">{t("charts.metric.height")}</ToggleGroupItem>
+            <ToggleGroupItem value="weight" className="data-[state=on]:bg-accent/60 data-[state=on]:text-accent-foreground hover:bg-accent/40">{t("charts.metric.weight")}</ToggleGroupItem>
           </ToggleGroup>
 
           {/* Export menu */}
