@@ -26,7 +26,7 @@ export const zhCN: MessageSchema = {
     editDesc: "更新宝宝数据记录。",
     empty: "暂无数据",
     fields: {
-      baby: "宝宝",
+      baby: "姓名",
       monthAge: "月龄",
       heightCm: "身高（cm）",
       weightKg: "体重（kg）",
@@ -49,7 +49,7 @@ export const zhCN: MessageSchema = {
   },
   nav: {
     dashboard: "仪表盘",
-    babies: "宝宝",
+    babies: "宝宝管理",
     analytics: "宝宝数据",
     projects: "项目",
     team: "团队",

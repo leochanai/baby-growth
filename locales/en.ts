@@ -24,7 +24,7 @@ export const en = {
     editDesc: "Update baby data record.",
     empty: "No data yet",
     fields: {
-      baby: "Baby",
+      baby: "Name",
       monthAge: "Month Age",
       heightCm: "Height (cm)",
       weightKg: "Weight (kg)",
