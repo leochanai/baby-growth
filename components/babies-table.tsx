@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { IconDotsVertical, IconPencil, IconPlus, IconTrash, IconChevronsLeft, IconChevronLeft, IconChevronRight, IconChevronsRight, IconChevronUp, IconChevronDown } from "@tabler/icons-react"
+import { IconDotsVertical, IconPencil, IconPlus, IconTrash, IconChevronsLeft, IconChevronLeft, IconChevronRight, IconChevronsRight, IconChevronUp, IconChevronDown, IconGenderMale, IconGenderFemale } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
@@ -18,6 +18,7 @@ import { BabyForm, type BabyFormValue } from "@/components/baby-form"
 import { useI18n } from "@/components/i18n-provider"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge"
 
 export type BabyRow = {
   id: number
@@ -173,7 +174,17 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
             {pageRows.map((b) => (
               <TableRow key={b.id}>
                 <TableCell>{b.name}</TableCell>
-                <TableCell>{b.gender === "MALE" ? t("babies.gender.male") : t("babies.gender.female")}</TableCell>
+                <TableCell>
+                  {b.gender === "MALE" ? (
+                    <Badge variant="outline" className="border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-400/40 dark:bg-sky-500/15 dark:text-sky-100">
+                      <IconGenderMale /> {t("babies.gender.male")}
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-400/40 dark:bg-rose-500/15 dark:text-rose-100">
+                      <IconGenderFemale /> {t("babies.gender.female")}
+                    </Badge>
+                  )}
+                </TableCell>
                 <TableCell>{new Date(b.birthDate).toISOString().slice(0, 10)}</TableCell>
                 <TableCell>
                   {(() => {
