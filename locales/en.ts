@@ -6,6 +6,14 @@ export const en = {
     appearance: "Appearance",
     language: "Language",
     current: "Current",
+    save: "Save",
+    saving: "Saving...",
+    actions: "Actions",
+    openMenu: "Open menu",
+    edit: "Edit",
+    delete: "Delete",
+    pickDate: "Pick a date",
+    cancel: "Cancel",
   },
   menu: {
     account: "Account",
@@ -15,7 +23,7 @@ export const en = {
   },
   nav: {
     dashboard: "Dashboard",
-    lifecycle: "Lifecycle",
+    babies: "Babies",
     analytics: "Analytics",
     projects: "Projects",
     team: "Team",
@@ -59,6 +67,25 @@ export const en = {
     languages: {
       en: "English",
       zhCN: "简体中文",
+    },
+  },
+  babies: {
+    add: "Add Baby",
+    edit: "Edit Baby",
+    addDesc: "Create a new baby's profile.",
+    editDesc: "Update baby's information.",
+    empty: "No babies yet",
+    count: "{n} babies",
+    confirmDelete: "Delete this record?",
+    gender: { male: "Male", female: "Female" },
+    fields: {
+      name: "Name",
+      namePlaceholder: "Baby's name",
+      gender: "Gender",
+      birthDate: "Date of Birth",
+    },
+    form: {
+      invalid: "Please complete the form correctly.",
     },
   },
   accountPage: {

@@ -8,6 +8,14 @@ export const zhCN: MessageSchema = {
     appearance: "外观",
     language: "语言",
     current: "当前",
+    save: "保存",
+    saving: "保存中...",
+    actions: "操作",
+    openMenu: "打开菜单",
+    edit: "编辑",
+    delete: "删除",
+    pickDate: "选择日期",
+    cancel: "取消",
   },
   menu: {
     account: "账号",
@@ -17,7 +25,7 @@ export const zhCN: MessageSchema = {
   },
   nav: {
     dashboard: "仪表盘",
-    lifecycle: "生命周期",
+    babies: "宝宝",
     analytics: "分析",
     projects: "项目",
     team: "团队",
@@ -61,6 +69,25 @@ export const zhCN: MessageSchema = {
     languages: {
       en: "English",
       zhCN: "简体中文",
+    },
+  },
+  babies: {
+    add: "新增宝宝",
+    edit: "编辑宝宝",
+    addDesc: "创建一位宝宝的档案。",
+    editDesc: "更新宝宝信息。",
+    empty: "暂无宝宝",
+    count: "{n} 位宝宝",
+    confirmDelete: "确认删除该记录？",
+    gender: { male: "男", female: "女" },
+    fields: {
+      name: "姓名",
+      namePlaceholder: "宝宝的名字",
+      gender: "性别",
+      birthDate: "出生日期",
+    },
+    form: {
+      invalid: "请正确填写表单",
     },
   },
   accountPage: {
