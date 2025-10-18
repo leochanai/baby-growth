@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { IconCirclePlusFilled, IconMail, type Icon } from "@tabler/icons-react"
 
 import { Button } from "@/components/ui/button"
@@ -22,6 +22,7 @@ export function NavMain({
   }[]
 }) {
   const router = useRouter()
+  const pathname = usePathname()
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -49,6 +50,7 @@ export function NavMain({
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
                 tooltip={item.title}
+                isActive={pathname === item.url}
                 onClick={() => router.push(item.url)}
               >
                 {item.icon && <item.icon />}
