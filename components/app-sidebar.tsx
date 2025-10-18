@@ -43,10 +43,8 @@ const baseData = {
   },
   navMain: [
     { title: "", url: "/dashboard", icon: IconDashboard },
-    { title: "", url: "/babies", icon: IconBabyBottle },
-    { title: "", url: "/data", icon: IconGrowth },
-    { title: "", url: "#", icon: IconFolder },
-    { title: "", url: "#", icon: IconUsers },
+    { title: "", url: "#", icon: IconFolder }, // Projects
+    { title: "", url: "#", icon: IconUsers },  // Team
   ],
   navClouds: [
     { title: "", icon: IconCamera, isActive: true, url: "#", items: [{ title: "", url: "#" }, { title: "", url: "#" }] },
@@ -68,9 +66,9 @@ const baseData = {
     },
   ],
   documents: [
-    { name: "", url: "#", icon: IconDatabase },
-    { name: "", url: "#", icon: IconReport },
-    { name: "", url: "#", icon: IconFileWord },
+    // Will be replaced with Babies + Baby Data via i18n in AppSidebar
+    { name: "", url: "/babies", icon: IconBabyBottle },
+    { name: "", url: "/data", icon: IconGrowth },
   ],
 }
 
@@ -86,10 +84,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       ],
       navMain: [
         { ...baseData.navMain[0], title: t("nav.dashboard") },
-        { ...baseData.navMain[1], title: t("nav.babies") },
-        { ...baseData.navMain[2], title: t("nav.analytics") },
-        { ...baseData.navMain[3], title: t("nav.projects") },
-        { ...baseData.navMain[4], title: t("nav.team") },
+        // Babies & Baby Data removed from main; moved to Documents.
+        { ...baseData.navMain[1], title: t("nav.projects") },
+        { ...baseData.navMain[2], title: t("nav.team") },
       ],
       navClouds: [
         {
@@ -118,9 +115,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         },
       ],
       documents: [
-        { ...baseData.documents[0], name: t("nav.documents.dataLibrary") },
-        { ...baseData.documents[1], name: t("nav.documents.reports") },
-        { ...baseData.documents[2], name: t("nav.documents.wordAssistant") },
+        { ...baseData.documents[0], name: t("nav.babies"), url: "/babies" },
+        { ...baseData.documents[1], name: t("nav.analytics"), url: "/data" },
       ],
     }
   }, [t])
