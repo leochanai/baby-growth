@@ -52,7 +52,7 @@ export const en = {
     analytics: "Baby Data",
     projects: "Projects",
     team: "Team",
-    quickCreate: "Quick Create",
+    quickCreate: "Quick Add",
     inbox: "Inbox",
     getHelp: "Get Help",
     search: "Search",

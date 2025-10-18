@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { IconChevronLeft, IconChevronRight, IconChevronsLeft, IconChevronsRight, IconDotsVertical, IconPencil, IconPlus, IconTrash } from "@tabler/icons-react"
 
 import { Button } from "@/components/ui/button"
@@ -24,8 +24,10 @@ export type BabyDataRow = {
 export function BabyDataTable({ initial, babies }: { initial: BabyDataRow[]; babies: BabyOption[] }) {
   const { t } = useI18n()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [rows, setRows] = React.useState<BabyDataRow[]>([...initial].sort((a, b) => b.monthAge - a.monthAge))
   const [creating, setCreating] = React.useState(false)
+  const [createOpen, setCreateOpen] = React.useState(false)
   const [editing, setEditing] = React.useState<BabyDataRow | null>(null)
   const [createError, setCreateError] = React.useState<string | null>(null)
   const [editError, setEditError] = React.useState<string | null>(null)
@@ -52,6 +54,16 @@ export function BabyDataTable({ initial, babies }: { initial: BabyDataRow[]; bab
     const start = pageIndex * pageSize
     return filteredRows.slice(start, start + pageSize)
   }, [filteredRows, pageIndex, pageSize])
+
+  // Open create dialog when arriving with ?quickAdd=1
+  React.useEffect(() => {
+    const q = searchParams?.get("quickAdd")
+    if (q) {
+      setCreateOpen(true)
+      // strip query so refresh/back doesn't keep reopening
+      router.replace("/data")
+    }
+  }, [searchParams])
 
   async function createOne(values: BabyDataFormValue) {
     setCreating(true)
@@ -102,7 +114,7 @@ export function BabyDataTable({ initial, babies }: { initial: BabyDataRow[]; bab
   return (
     <div className="w-full">
       <div className="content-x flex items-center justify-between py-2">
-        <Dialog onOpenChange={(v) => !v && setCreateError(null)}>
+        <Dialog open={createOpen} onOpenChange={(v) => { setCreateOpen(v); if (!v) setCreateError(null) }}>
           <DialogTrigger asChild>
             <Button size="sm">
               <IconPlus />

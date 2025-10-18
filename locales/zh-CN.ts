@@ -53,7 +53,7 @@ export const zhCN: MessageSchema = {
     analytics: "宝宝数据",
     projects: "项目",
     team: "团队",
-    quickCreate: "快速创建",
+    quickCreate: "快速新增",
     inbox: "收件箱",
     getHelp: "获取帮助",
     search: "搜索",
