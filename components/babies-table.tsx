@@ -46,6 +46,24 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
     return rows.slice(start, start + pageSize)
   }, [rows, pageIndex, pageSize])
 
+  function calcMonthAgeParts(birthISO: string, now = new Date()) {
+    const b = new Date(birthISO)
+    // Normalize to date (ignore time zone drift by using Y-M-D constructor)
+    const b0 = new Date(b.getFullYear(), b.getMonth(), b.getDate())
+    const n0 = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    if (isNaN(b0.getTime())) return { m: 0, d: 0 }
+    // months difference
+    let m = (n0.getFullYear() - b0.getFullYear()) * 12 + (n0.getMonth() - b0.getMonth())
+    let anchor = new Date(b0.getFullYear(), b0.getMonth() + m, b0.getDate())
+    if (anchor.getTime() > n0.getTime()) {
+      m -= 1
+      anchor = new Date(b0.getFullYear(), b0.getMonth() + m, b0.getDate())
+    }
+    const msPerDay = 24 * 60 * 60 * 1000
+    const d = Math.max(0, Math.floor((n0.getTime() - anchor.getTime()) / msPerDay))
+    return { m: Math.max(0, m), d }
+  }
+
   async function createOne(values: BabyFormValue) {
     setCreating(true)
     try {
@@ -118,9 +136,10 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
         <Table>
           <TableHeader className="bg-muted sticky top-0 z-10">
             <TableRow>
-              <TableHead className="w-[40%]">{t("babies.fields.name")}</TableHead>
-              <TableHead className="w-[20%]">{t("babies.fields.gender")}</TableHead>
-              <TableHead className="w-[25%]">{t("babies.fields.birthDate")}</TableHead>
+              <TableHead className="w-[35%]">{t("babies.fields.name")}</TableHead>
+              <TableHead className="w-[15%]">{t("babies.fields.gender")}</TableHead>
+              <TableHead className="w-[20%]">{t("babies.fields.birthDate")}</TableHead>
+              <TableHead className="w-[15%]">{t("babies.fields.monthAge")}</TableHead>
               <TableHead className="w-[15%] text-right">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
@@ -130,6 +149,16 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
                 <TableCell>{b.name}</TableCell>
                 <TableCell>{b.gender === "MALE" ? t("babies.gender.male") : t("babies.gender.female")}</TableCell>
                 <TableCell>{new Date(b.birthDate).toISOString().slice(0, 10)}</TableCell>
+                <TableCell>
+                  {(() => {
+                    const { m, d } = calcMonthAgeParts(b.birthDate)
+                    const monthLabel = t("charts.units.month")
+                    const dayLabel = t("charts.units.day")
+                    return (
+                      <span className="font-mono tabular-nums">{m}{monthLabel}{d > 0 ? ` ${d}${dayLabel}` : ""}</span>
+                    )
+                  })()}
+                </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -153,7 +182,7 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
             ))}
             {rows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-muted-foreground">
+                <TableCell colSpan={5} className="text-center text-muted-foreground">
                   {t("babies.empty")}
                 </TableCell>
               </TableRow>

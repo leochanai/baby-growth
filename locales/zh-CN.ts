@@ -108,6 +108,7 @@ export const zhCN: MessageSchema = {
       cm: "cm",
       kg: "kg",
       month: "月",
+      day: "天",
     },
   },
   settings: {
@@ -142,6 +143,7 @@ export const zhCN: MessageSchema = {
       namePlaceholder: "宝宝的名字",
       gender: "性别",
       birthDate: "出生日期",
+      monthAge: "月龄",
     },
     form: {
       invalid: "请正确填写表单",

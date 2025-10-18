@@ -107,6 +107,7 @@ export const en = {
       cm: "cm",
       kg: "kg",
       month: "mo",
+      day: "d",
     },
   },
   settings: {
@@ -141,6 +142,7 @@ export const en = {
       namePlaceholder: "Baby's name",
       gender: "Gender",
       birthDate: "Date of Birth",
+      monthAge: "Month Age",
     },
     form: {
       invalid: "Please complete the form correctly.",
