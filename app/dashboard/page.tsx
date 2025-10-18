@@ -43,12 +43,9 @@ export default async function Page() {
         <SiteHeader titleKey="nav.dashboard" />
         <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col">
-            <div className="content-y stack-y flex flex-col">
-              <div className="content-x">
-                <ChartAreaInteractive babies={babies} data={data} metric="height" />
-              </div>
-              <div className="content-x">
-                <ChartAreaInteractive babies={babies} data={data} metric="weight" />
+            <div className="content-y stack-y flex flex-1 flex-col">
+              <div className="content-x flex-1">
+                <ChartAreaInteractive babies={babies} data={data} />
               </div>
             </div>
           </div>

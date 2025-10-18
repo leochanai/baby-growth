@@ -98,11 +98,15 @@ export const en = {
     heightByAgeDesc: "Baby height (cm) over month age",
     weightByAgeTitle: "Weight by Month Age",
     weightByAgeDesc: "Baby weight (kg) over month age",
+    metric: { height: "Height", weight: "Weight" },
     filters: {
       all: "All Babies",
       boys: "Boys",
       girls: "Girls",
     },
+    export: { label: "Export", png: "Export PNG", svg: "Export SVG" },
+    legend: { selectAll: "Select All", clear: "Clear" },
+    hint: { standardHiddenAll: "Standards hidden for 'All'. Choose a sex to view." },
     units: {
       cm: "cm",
       kg: "kg",

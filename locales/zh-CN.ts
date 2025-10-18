@@ -99,11 +99,15 @@ export const zhCN: MessageSchema = {
     heightByAgeDesc: "按月龄展示身高（cm）",
     weightByAgeTitle: "宝宝体重图",
     weightByAgeDesc: "按月龄展示体重（kg）",
+    metric: { height: "身高", weight: "体重" },
     filters: {
       all: "全部宝宝",
       boys: "男宝宝",
       girls: "女宝宝",
     },
+    export: { label: "导出", png: "导出 PNG", svg: "导出 SVG" },
+    legend: { selectAll: "全选", clear: "清空" },
+    hint: { standardHiddenAll: "“全部”不显示标准线，请选择男/女查看。" },
     units: {
       cm: "cm",
       kg: "kg",
