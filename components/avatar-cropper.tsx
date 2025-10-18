@@ -104,7 +104,7 @@ export function AvatarCropper({ src, open, onOpenChange, onCancel, onSave, outpu
           <DialogTitle>{t("avatarCrop.title")}</DialogTitle>
           <DialogDescription>{t("avatarCrop.description")}</DialogDescription>
         </DialogHeader>
-        <div className="px-5 pb-4">
+        <div className="content-x pb-4">
           {/* Stage: image fully visible (contain); selection square moves on top */}
           <div
             className="relative mx-auto select-none touch-none rounded-xl bg-neutral-200/40 dark:bg-neutral-700/30"

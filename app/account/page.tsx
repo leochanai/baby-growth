@@ -17,7 +17,7 @@ export default async function AccountPage() {
   const lang = cookies().get("lang")?.value === "zh-CN" ? "zh-CN" : "en"
   const dict = dictionaries[lang] ?? dictionaries["en"]
   return (
-    <div className="p-4 lg:p-6">
+    <div className="content-x content-y">
       <div className="mx-auto w-full max-w-3xl space-y-6">
         <Card>
           <CardHeader>

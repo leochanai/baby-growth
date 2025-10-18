@@ -46,7 +46,7 @@ const DialogContent = React.forwardRef<
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col space-y-1.5 px-5 pt-5", className)} {...props} />
+  <div className={cn("content-x flex flex-col space-y-1.5 pt-5", className)} {...props} />
 )
 
 const DialogTitle = React.forwardRef<
@@ -66,7 +66,7 @@ const DialogDescription = React.forwardRef<
 DialogDescription.displayName = DialogPrimitive.Description.displayName
 
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex items-center justify-end gap-2 px-5 pb-5", className)} {...props} />
+  <div className={cn("content-x flex items-center justify-end gap-2 pb-5", className)} {...props} />
 )
 
 export {
@@ -81,4 +81,3 @@ export {
   DialogFooter,
   DialogClose,
 }
-

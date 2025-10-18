@@ -71,7 +71,7 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between px-4 py-2 lg:px-6">
+      <div className="content-x flex items-center justify-between py-2">
         <div className="text-sm text-muted-foreground">{t("babies.count", { n: rows.length })}</div>
         <Dialog>
           <DialogTrigger asChild>
@@ -85,7 +85,7 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
               <DialogTitle>{t("babies.add")}</DialogTitle>
               <DialogDescription>{t("babies.addDesc")}</DialogDescription>
             </DialogHeader>
-            <div className="px-5 pb-5">
+            <div className="content-x pb-5">
               <BabyForm formId="baby-create-form" renderSubmit={false} submitting={creating} onSubmit={(v) => createOne(v)} />
             </div>
             <DialogFooter>
@@ -99,7 +99,7 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
           </DialogContent>
         </Dialog>
       </div>
-      <div className="px-4 lg:px-6">
+      <div className="content-x">
         <Table>
           <TableHeader>
             <TableRow>
@@ -155,7 +155,7 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
           </DialogHeader>
           {editing && (
             <>
-              <div className="px-5 pb-5">
+              <div className="content-x pb-5">
                 <BabyForm
                   formId="baby-edit-form"
                   renderSubmit={false}

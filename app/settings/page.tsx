@@ -28,7 +28,7 @@ export default function SettingsPage() {
   const { t } = useI18n()
 
   return (
-    <div className="p-4 lg:p-6">
+    <div className="content-x content-y">
       <div className="mx-auto w-full max-w-3xl space-y-6">
         <Card>
           <CardHeader>
