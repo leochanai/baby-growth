@@ -196,4 +196,20 @@ export const zhCN: MessageSchema = {
     confirmBtn: "确认删除",
     deleting: "删除中...",
   },
+  import: {
+    open: "导入",
+    title: "导入数据",
+    desc: "上传从本应用导出的 ZIP 文件。选择是追加合并还是替换导入。",
+    file: "导出的 ZIP 文件",
+    chooseFile: "选择文件",
+    noFile: "未选择文件",
+    mode: "导入模式",
+    modes: { append: "追加（合并）", replace: "替换（清空后导入）" },
+    submit: "开始导入",
+    errors: { noFile: "请选择文件", failed: "导入失败" },
+    success: {
+      title: "导入完成",
+      desc: "模式：{mode}。宝宝 +{bCreated}（移除 {bRemoved}）。记录 +{dCreated}/更新 {dUpdated}/跳过 {dSkipped}。",
+    },
+  },
 }
