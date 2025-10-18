@@ -11,13 +11,11 @@ import {
   IconFileAi,
   IconFileDescription,
   IconFileWord,
-  IconFolder,
   IconHelp,
   IconInnerShadowTop,
   IconReport,
   IconSearch,
   IconSettings,
-  IconUsers,
 } from "@tabler/icons-react"
 
 import { NavDocuments } from "@/components/nav-documents"
@@ -43,8 +41,6 @@ const baseData = {
   },
   navMain: [
     { title: "", url: "/dashboard", icon: IconDashboard },
-    { title: "", url: "#", icon: IconFolder }, // Projects
-    { title: "", url: "#", icon: IconUsers },  // Team
   ],
   navClouds: [
     { title: "", icon: IconCamera, isActive: true, url: "#", items: [{ title: "", url: "#" }, { title: "", url: "#" }] },
@@ -84,9 +80,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       ],
       navMain: [
         { ...baseData.navMain[0], title: t("nav.dashboard") },
-        // Babies & Baby Data removed from main; moved to Documents.
-        { ...baseData.navMain[1], title: t("nav.projects") },
-        { ...baseData.navMain[2], title: t("nav.team") },
       ],
       navClouds: [
         {
