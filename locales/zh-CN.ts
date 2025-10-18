@@ -37,6 +37,9 @@ export const zhCN: MessageSchema = {
       createFailed: "创建失败",
       updateFailed: "更新失败",
     },
+    filter: {
+      all: "全部宝宝",
+    },
   },
   menu: {
     account: "账号",

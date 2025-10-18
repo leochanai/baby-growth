@@ -35,6 +35,9 @@ export const en = {
       createFailed: "Create failed",
       updateFailed: "Update failed",
     },
+    filter: {
+      all: "All Babies",
+    },
   },
   menu: {
     account: "Account",

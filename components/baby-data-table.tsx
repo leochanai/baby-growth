@@ -29,19 +29,29 @@ export function BabyDataTable({ initial, babies }: { initial: BabyDataRow[]; bab
   const [editing, setEditing] = React.useState<BabyDataRow | null>(null)
   const [createError, setCreateError] = React.useState<string | null>(null)
   const [editError, setEditError] = React.useState<string | null>(null)
+  const [filterBaby, setFilterBaby] = React.useState<string>("all")
   const [pageIndex, setPageIndex] = React.useState(0)
   const [pageSize, setPageSize] = React.useState(10)
 
   const babyMap = React.useMemo(() => new Map(babies.map((b) => [b.id, b.name])), [babies])
-  const pageCount = Math.max(1, Math.ceil(rows.length / pageSize))
+  const filteredRows = React.useMemo(() => {
+    if (filterBaby === "all") return rows
+    const bid = Number(filterBaby)
+    return rows.filter((r) => r.babyId === bid)
+  }, [rows, filterBaby])
+
+  const pageCount = Math.max(1, Math.ceil(filteredRows.length / pageSize))
   React.useEffect(() => {
     setPageIndex((i) => Math.min(i, pageCount - 1))
-  }, [rows.length, pageSize])
+  }, [filteredRows.length, pageSize])
+  React.useEffect(() => {
+    setPageIndex(0)
+  }, [filterBaby])
 
   const pageRows = React.useMemo(() => {
     const start = pageIndex * pageSize
-    return rows.slice(start, start + pageSize)
-  }, [rows, pageIndex, pageSize])
+    return filteredRows.slice(start, start + pageSize)
+  }, [filteredRows, pageIndex, pageSize])
 
   async function createOne(values: BabyDataFormValue) {
     setCreating(true)
@@ -120,6 +130,22 @@ export function BabyDataTable({ initial, babies }: { initial: BabyDataRow[]; bab
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        <div className="flex items-center gap-2">
+          <Label htmlFor="baby-filter" className="text-sm font-medium hidden sm:block">
+            {t("babyData.fields.baby")}
+          </Label>
+          <Select value={filterBaby} onValueChange={(v) => setFilterBaby(v)}>
+            <SelectTrigger id="baby-filter" className="w-40">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t("babyData.filter.all")}</SelectItem>
+              {babies.map((b) => (
+                <SelectItem key={b.id} value={`${b.id}`}>{b.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="content-x">
