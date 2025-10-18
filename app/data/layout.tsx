@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth/next"
 import type { Session } from "next-auth"
 
 import { AppSidebar } from "@/components/app-sidebar"
-import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
 export default async function DataLayout({ children }: { children: React.ReactNode }) {
@@ -17,11 +16,7 @@ export default async function DataLayout({ children }: { children: React.ReactNo
       } as React.CSSProperties}
     >
       <AppSidebar variant="inset" />
-      <SidebarInset>
-        <SiteHeader titleKey="nav.analytics" />
-        {children}
-      </SidebarInset>
+      <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
   )
 }
-

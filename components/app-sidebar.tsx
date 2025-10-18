@@ -65,6 +65,7 @@ const baseData = {
     // Will be replaced with Babies + Baby Data via i18n in AppSidebar
     { name: "", url: "/babies", icon: IconBabyBottle },
     { name: "", url: "/data", icon: IconGrowth },
+    { name: "", url: "/data/who", icon: IconReport },
   ],
 }
 
@@ -110,6 +111,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       documents: [
         { ...baseData.documents[0], name: t("nav.babies"), url: "/babies" },
         { ...baseData.documents[1], name: t("nav.analytics"), url: "/data" },
+        { ...baseData.documents[2], name: t("nav.who"), url: "/data/who" },
       ],
     }
   }, [t])

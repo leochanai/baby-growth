@@ -50,3 +50,15 @@ model BabyData {
   @@index([babyId])
   @@unique([babyId, monthAge])
 }
+
+model WhoData {
+  id             Int      @id @default(autoincrement())
+  gender         String   // 'male' | 'female'
+  monthAge       Int
+  heightMedianCm Float
+  weightMedianKg Float
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([gender, monthAge])
+}

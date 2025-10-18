@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import type { Session } from "next-auth"
 import { redirect } from "next/navigation"
 import { BabyDataTable } from "@/components/baby-data-table"
+import { SiteHeader } from "@/components/site-header"
 
 export default async function DataPage() {
   const session = (await getServerSession()) as Session | null
@@ -24,12 +25,15 @@ export default async function DataPage() {
   }) ?? Promise.resolve([]))) as { id: number; babyId: number; monthAge: number; heightCm: number; weightKg: number }[]
 
   return (
-    <div className="flex flex-1 flex-col">
-      <div className="@container/main flex flex-1 flex-col">
-        <div className="content-y stack-y flex flex-col">
-          <BabyDataTable initial={data} babies={babies} />
+    <>
+      <SiteHeader titleKey="nav.analytics" />
+      <div className="flex flex-1 flex-col">
+        <div className="@container/main flex flex-1 flex-col">
+          <div className="content-y stack-y flex flex-col">
+            <BabyDataTable initial={data} babies={babies} />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
