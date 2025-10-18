@@ -67,7 +67,7 @@ export const zhCN: MessageSchema = {
       },
     },
     documents: {
-      label: "文档",
+      label: "数据管理",
       more: "更多",
       open: "打开",
       share: "分享",

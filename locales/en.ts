@@ -66,7 +66,7 @@ export const en = {
       },
     },
     documents: {
-      label: "Documents",
+      label: "Data",
       more: "More",
       open: "Open",
       share: "Share",
