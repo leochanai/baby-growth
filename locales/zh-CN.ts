@@ -114,6 +114,10 @@ export const zhCN: MessageSchema = {
       month: "月",
       day: "天",
     },
+    delta: {
+      height: { high: "偏高", low: "偏矮" },
+      weight: { high: "偏重", low: "偏轻" },
+    },
   },
   settings: {
     appearanceDesc: "自定义颜色主题与调色盘。",

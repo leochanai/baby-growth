@@ -97,10 +97,9 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
       if (!byBaby.has(r.babyId)) return
       babyMonthsSet.add(r.monthAge)
     })
+    // WHO series should appear only on months that exist in baby data
     const monthsSet = new Set<number>(babyMonthsSet)
     if (who && (sex === "MALE" || sex === "FEMALE") && babyMonthsSet.size > 0) {
-      const maxBabyMonth = Math.max(...Array.from(babyMonthsSet))
-      for (const item of who) if (item.monthAge <= maxBabyMonth) monthsSet.add(item.monthAge)
       // configure WHO series (green)
       cfg["WHO"] = { label: "WHO", color: "hsl(145, 65%, 42%)" }
     }
@@ -413,12 +412,30 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
                         </div>
                       )
                     }}
-                    formatter={(value, name) => {
+                    formatter={(value, name, item) => {
                       const babyName = visibleBabies.find((b) => `b${b.id}` === String(name))?.name || String(name)
+                      const unit = metric === 'height' ? t('charts.units.cm') : t('charts.units.kg')
+                      // Pull WHO value for this row if present
+                      const whoVal = (item && typeof (item as any).payload?.WHO === 'number') ? (item as any).payload.WHO as number : undefined
+                      // Only compute delta for baby series (not WHO) and when sex != all
+                      let delta: number | undefined
+                      if (babyName !== 'WHO' && typeof whoVal === 'number' && (sex === 'MALE' || sex === 'FEMALE') && typeof value === 'number') {
+                        delta = value - whoVal
+                      }
+                      const showDelta = typeof delta === 'number' && Math.abs(delta as number) >= 0.05
+                      const deltaLabel = metric === 'height'
+                        ? (delta && delta > 0 ? t('charts.delta.height.high') : t('charts.delta.height.low'))
+                        : (delta && delta > 0 ? t('charts.delta.weight.high') : t('charts.delta.weight.low'))
                       return (
                         <>
                           <span className="text-muted-foreground">{babyName}</span>
-                          <span className="text-foreground font-mono font-medium tabular-nums">{typeof value === 'number' ? value.toFixed(1) : value} {metric === "height" ? t("charts.units.cm") : t("charts.units.kg")}</span>
+                          <span className="text-foreground font-mono font-medium tabular-nums">{typeof value === 'number' ? value.toFixed(1) : value} {unit}</span>
+                          {showDelta ? (
+                            <span className="text-muted-foreground">{deltaLabel}:</span>
+                          ) : null}
+                          {showDelta ? (
+                            <span className="text-foreground font-mono tabular-nums">{Math.abs(delta as number).toFixed(1)} {unit}</span>
+                          ) : null}
                         </>
                       )
                     }}

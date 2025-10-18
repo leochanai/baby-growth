@@ -113,6 +113,10 @@ export const en = {
       month: "mo",
       day: "d",
     },
+    delta: {
+      height: { high: "above", low: "below" },
+      weight: { high: "heavier", low: "lighter" },
+    },
   },
   settings: {
     appearanceDesc: "Customize color theme and palette.",
