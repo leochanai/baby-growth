@@ -95,10 +95,6 @@ export function NavUser() {
                 <IconCreditCard />
                 {t("menu.billing")}
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconNotification />
-                {t("menu.notifications")}
-              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem

@@ -10,6 +10,7 @@ import { cookies } from "next/headers"
 import { dictionaries } from "@/locales"
 import { AccountDangerZone } from "@/components/account-danger-zone"
 import { useI18n } from "@/components/i18n-provider"
+import { AccountImport } from "@/components/account-import"
 
 export default async function AccountPage() {
   const session = (await getServerSession()) as Session | null
@@ -50,6 +51,7 @@ export default async function AccountPage() {
               <Button asChild>
                 <a href="/api/export/all">{dict.accountPage.exportAll}</a>
               </Button>
+              <AccountImport />
             </div>
           </CardContent>
         </Card>

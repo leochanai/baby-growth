@@ -8,6 +8,7 @@ export const en = {
     current: "Current",
     save: "Save",
     saving: "Saving...",
+    ok: "OK",
     actions: "Actions",
     openMenu: "Open menu",
     edit: "Edit",
@@ -160,6 +161,22 @@ export const en = {
     confirmDesc: "This action cannot be undone. Your data will be removed.",
     confirmBtn: "Yes, delete",
     deleting: "Deleting...",
+  },
+  import: {
+    open: "Import",
+    title: "Import Data",
+    desc: "Upload the ZIP exported from this app. Choose whether to append to existing data or replace it.",
+    file: "Exported ZIP file",
+    chooseFile: "Choose file",
+    noFile: "No file selected",
+    mode: "Import Mode",
+    modes: { append: "Append (upsert)", replace: "Replace (wipe then import)" },
+    submit: "Start Import",
+    errors: { noFile: "Please choose a file", failed: "Import failed" },
+    success: {
+      title: "Import complete",
+      desc: "Mode: {mode}. Babies +{bCreated} (removed {bRemoved}). Records +{dCreated}/updated {dUpdated}/skipped {dSkipped}.",
+    },
   },
 } as const
 

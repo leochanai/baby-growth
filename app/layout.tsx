@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { Toaster } from "@/components/ui/sonner";
 import { cookies } from "next/headers";
 import { dictionaries } from "@/locales";
 
@@ -47,6 +48,7 @@ export default async function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers initialPalette={initialPalette} initialLanguage={initialLanguage as any} initialMessages={initialMessages}>
           {children}
+          <Toaster richColors closeButton position="top-right" />
         </Providers>
       </body>
     </html>
