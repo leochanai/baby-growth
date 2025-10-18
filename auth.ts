@@ -41,11 +41,13 @@ export const authOptions = {
         // load image from DB if available
         const dbUser = await prisma.user.findUnique({ where: { email: user.email as string } })
         if (dbUser?.image) token.picture = dbUser.image
+        if (dbUser?.familyName) (token as any).familyName = dbUser.familyName
       }
       // When client calls session.update, sync into token
       if (trigger === "update" && session) {
         if (session.name !== undefined) token.name = session.name
         if ((session as any).image !== undefined) token.picture = (session as any).image
+        if ((session as any).familyName !== undefined) (token as any).familyName = (session as any).familyName
       }
       return token
     },
@@ -54,6 +56,7 @@ export const authOptions = {
         session.user.name = token.name as string | null
         session.user.email = token.email as string | null
         session.user.image = (token as any).picture ?? null
+        ;(session.user as any).familyName = (token as any).familyName ?? null
       }
       return session
     },

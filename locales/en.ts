@@ -117,6 +117,8 @@ export const en = {
     palette: "Palette",
     selectMode: "Select mode",
     selectPalette: "Select palette",
+    homeTitle: "Home Title",
+    homeTitleDesc: "Shown at the top-left. Leave empty to use the default.",
     mode: {
       light: "Light",
       dark: "Dark",
@@ -127,6 +129,13 @@ export const en = {
       en: "English",
       zhCN: "简体中文",
     },
+  },
+  home: {
+    titleDefault: "{name}'s Home",
+    label: "Family Name",
+    placeholder: "e.g. The Smiths",
+    save: "Save",
+    saved: "Title updated",
   },
   babies: {
     add: "Add Baby",

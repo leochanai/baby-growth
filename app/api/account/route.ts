@@ -14,13 +14,14 @@ export async function GET() {
   }
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
-    select: { id: true, name: true, email: true, image: true, createdAt: true, updatedAt: true },
+    select: { id: true, name: true, familyName: true, email: true, image: true, createdAt: true, updatedAt: true },
   })
   return NextResponse.json(user)
 }
 
 const patchSchema = z.object({
   name: z.string().trim().min(2).max(32).optional(),
+  familyName: z.string().trim().min(1).max(50).optional(),
   // Accept absolute URLs or app-relative paths like "/avatars/.."; empty string means remove
   image: z
     .string()
@@ -47,8 +48,9 @@ export async function PATCH(req: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 })
   }
-  const data: { name?: string; image?: string | null } = {}
+  const data: { name?: string; familyName?: string | null; image?: string | null } = {}
   if (parsed.data.name !== undefined) data.name = parsed.data.name
+  if (parsed.data.familyName !== undefined) data.familyName = parsed.data.familyName || null
   if (parsed.data.image !== undefined) data.image = parsed.data.image || null
   // If image is being removed, delete previous local file (best effort)
   if (parsed.data.image === "") {
@@ -65,7 +67,7 @@ export async function PATCH(req: Request) {
   const user = await prisma.user.update({
     where: { email: session.user.email },
     data,
-    select: { id: true, name: true, email: true, image: true, createdAt: true, updatedAt: true },
+    select: { id: true, name: true, familyName: true, email: true, image: true, createdAt: true, updatedAt: true },
   })
 
   return NextResponse.json(user)

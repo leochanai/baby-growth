@@ -118,6 +118,8 @@ export const zhCN: MessageSchema = {
     palette: "调色盘",
     selectMode: "选择模式",
     selectPalette: "选择调色盘",
+    homeTitle: "家庭名称",
+    homeTitleDesc: "显示在左上角。不填则使用默认标题。",
     mode: {
       light: "浅色",
       dark: "深色",
@@ -128,6 +130,13 @@ export const zhCN: MessageSchema = {
       en: "English",
       zhCN: "简体中文",
     },
+  },
+  home: {
+    titleDefault: "{name}的家",
+    label: "家庭名称",
+    placeholder: "例如：刘家的家",
+    save: "保存",
+    saved: "标题已更新",
   },
   babies: {
     add: "新增宝宝",

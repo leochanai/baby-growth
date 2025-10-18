@@ -23,6 +23,7 @@ import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import { useI18n } from "@/components/i18n-provider"
+import { useSession } from "next-auth/react"
 import {
   Sidebar,
   SidebarContent,
@@ -71,6 +72,7 @@ const baseData = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { t } = useI18n()
+  const { data: session } = useSession()
   const data = React.useMemo(() => {
     return {
       ...baseData,
@@ -115,6 +117,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       ],
     }
   }, [t])
+  const displayTitle = React.useMemo(() => {
+    const name = session?.user?.name || ""
+    const family = (session?.user as any)?.familyName as string | null | undefined
+    if (family && family.trim().length > 0) return family
+    return t("home.titleDefault", { name: name || t("common.account") })
+  }, [session?.user?.name, (session?.user as any)?.familyName, t])
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -126,7 +134,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <Link href="/">
                 <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">{t("common.appName")}</span>
+                <span className="text-base font-semibold">{displayTitle}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

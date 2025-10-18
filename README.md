@@ -1,4 +1,4 @@
-# Baby Growth（宝宝生长跟踪）
+# Baby Growth
 
 A minimal growth-tracking app with theming and i18n.
 

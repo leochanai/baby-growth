@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Baby Growth（宝宝生长跟踪）",
+  title: "Baby Growth",
   description: "Baby Growth – 宝宝生长跟踪",
 };
 
