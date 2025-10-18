@@ -76,6 +76,19 @@ export const en = {
       wordAssistant: "Word Assistant",
     },
   },
+  charts: {
+    heightByAgeTitle: "Height by Month Age",
+    heightByAgeDesc: "Baby height (cm) over month age",
+    filters: {
+      all: "All Babies",
+      boys: "Boys",
+      girls: "Girls",
+    },
+    units: {
+      cm: "cm",
+      month: "mo",
+    },
+  },
   settings: {
     appearanceDesc: "Customize color theme and palette.",
     languageDesc: "Choose your display language.",

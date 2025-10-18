@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
+import { Line, LineChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 // import { useIsMobile } from "@/hooks/use-mobile"
 import {
@@ -12,12 +12,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"
+import { useI18n } from "@/components/i18n-provider"
 import {
   Select,
   SelectContent,
@@ -27,73 +23,79 @@ import {
 } from "@/components/ui/select"
 export const description = "Baby height by month age"
 
-type Baby = { id: number; name: string }
+type Baby = { id: number; name: string; gender?: string }
 type Row = { id: number; babyId: number; monthAge: number; heightCm: number }
 
-const chartConfig = {
-  height: {
-    label: "Height (cm)",
-    color: "var(--primary)",
-  },
-} satisfies ChartConfig
+// Config is generated dynamically per series (one per baby)
 
 export function ChartAreaInteractive({ babies, data }: { babies: Baby[]; data: Row[] }) {
-  const [selectedBabyId, setSelectedBabyId] = React.useState<string>(babies[0]?.id ? String(babies[0].id) : "")
+  const { t } = useI18n()
+  type Filter = "all" | "MALE" | "FEMALE"
+  const [filter, setFilter] = React.useState<Filter>("all")
 
-  React.useEffect(() => {
-    if (!babies.find((b) => String(b.id) === selectedBabyId)) {
-      setSelectedBabyId(babies[0]?.id ? String(babies[0].id) : "")
-    }
-  }, [babies])
+  // nothing
 
-  const filteredData = React.useMemo(() => {
-    const bid = Number(selectedBabyId)
-    return data
-      .filter((r) => (Number.isNaN(bid) || !bid ? true : r.babyId === bid))
-      .map((r) => ({ month: r.monthAge, height: r.heightCm }))
-      .sort((a, b) => a.month - b.month)
-  }, [data, selectedBabyId])
+  const groupBabies = React.useMemo(() => {
+    if (filter === "all") return babies
+    return babies.filter((b) => (b.gender || "").toUpperCase() === filter)
+  }, [babies, filter])
+
+  // Build pivoted dataset: one series per baby key
+  const { pivot, config } = React.useMemo(() => {
+    const keys: string[] = []
+    const cfg: ChartConfig = {}
+    const colorPool = [210, 340, 25, 270, 140, 0, 45, 180]
+    const byBaby = new Map<number, string>()
+    groupBabies.forEach((b, i) => {
+      const key = `b${b.id}`
+      keys.push(key)
+      byBaby.set(b.id, key)
+      const hue = colorPool[i % colorPool.length]
+      cfg[key] = { label: b.name, color: `hsl(${hue}, 70%, 50%)` }
+    })
+
+    // collect all months present in selected babies
+    const monthsSet = new Set<number>()
+    data.forEach((r) => {
+      if (!byBaby.has(r.babyId)) return
+      monthsSet.add(r.monthAge)
+    })
+    const months = Array.from(monthsSet).sort((a, b) => a - b)
+
+    const rows = months.map((m) => {
+      const row: any = { month: m }
+      groupBabies.forEach((b) => {
+        const key = byBaby.get(b.id)!
+        const found = data.find((r) => r.babyId === b.id && r.monthAge === m)
+        row[key] = found?.heightCm ?? null
+      })
+      return row
+    })
+
+    return { pivot: rows, config: cfg }
+  }, [groupBabies, data])
 
   return (
     <Card className="@container/card">
       <CardHeader>
-        <CardTitle>宝宝身高图</CardTitle>
-        <CardDescription>按月龄展示身高（cm）</CardDescription>
+        <CardTitle>{t("charts.heightByAgeTitle")}</CardTitle>
+        <CardDescription>{t("charts.heightByAgeDesc")}</CardDescription>
         <CardAction>
-          <Select value={selectedBabyId} onValueChange={setSelectedBabyId}>
-            <SelectTrigger className="w-40" size="sm" aria-label="选择宝宝">
-              <SelectValue placeholder="选择宝宝" />
+          <Select value={filter} onValueChange={(v) => setFilter(v as Filter)}>
+            <SelectTrigger className="w-40" size="sm" aria-label={t("charts.heightByAgeTitle")}> 
+              <SelectValue />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
-              {babies.map((b) => (
-                <SelectItem key={b.id} value={String(b.id)} className="rounded-lg">
-                  {b.name}
-                </SelectItem>
-              ))}
+              <SelectItem value="all" className="rounded-lg">{t("charts.filters.all")}</SelectItem>
+              <SelectItem value="MALE" className="rounded-lg">{t("charts.filters.boys")}</SelectItem>
+              <SelectItem value="FEMALE" className="rounded-lg">{t("charts.filters.girls")}</SelectItem>
             </SelectContent>
           </Select>
         </CardAction>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
-        >
-          <AreaChart data={filteredData}>
-            <defs>
-              <linearGradient id="fillHeight" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-height)"
-                  stopOpacity={1.0}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-height)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-            </defs>
+        <ChartContainer config={config} className="aspect-auto h-[300px] w-full">
+          <LineChart data={pivot}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
@@ -101,25 +103,41 @@ export function ChartAreaInteractive({ babies, data }: { babies: Baby[]; data: R
               axisLine={false}
               tickMargin={8}
               minTickGap={32}
-              tickFormatter={(value) => `${value}月`}
+              tickFormatter={(value) => `${value}${t("charts.units.month")}`}
             />
             <YAxis tickLine={false} axisLine={false} width={40} />
             <ChartTooltip
               cursor={false}
               content={
                 <ChartTooltipContent
-                  labelFormatter={(value) => `月龄：${value}`}
+                  hideLabel
+                  nameKey="dataKey"
+                  formatter={(value, name) => {
+                    const babyName = groupBabies.find((b) => `b${b.id}` === String(name))?.name || String(name)
+                    return (
+                      <>
+                        <span className="text-muted-foreground">{babyName}</span>
+                        <span className="text-foreground font-mono font-medium tabular-nums">{typeof value === 'number' ? value.toFixed(1) : value} {t("charts.units.cm")}</span>
+                      </>
+                    )
+                  }}
                   indicator="dot"
                 />
               }
             />
-            <Area
-              dataKey="height"
-              type="natural"
-              fill="url(#fillHeight)"
-              stroke="var(--color-height)"
-            />
-          </AreaChart>
+            {groupBabies.map((b) => (
+              <Line
+                key={b.id}
+                type="monotone"
+                dataKey={`b${b.id}`}
+                stroke={`var(--color-b${b.id})`}
+                dot={false}
+                strokeWidth={2}
+                isAnimationActive={false}
+              />
+            ))}
+            <ChartLegend verticalAlign="bottom" content={<ChartLegendContent />} />
+          </LineChart>
         </ChartContainer>
       </CardContent>
     </Card>

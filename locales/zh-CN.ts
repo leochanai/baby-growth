@@ -77,6 +77,19 @@ export const zhCN: MessageSchema = {
       wordAssistant: "文档助手",
     },
   },
+  charts: {
+    heightByAgeTitle: "宝宝身高图",
+    heightByAgeDesc: "按月龄展示身高（cm）",
+    filters: {
+      all: "全部宝宝",
+      boys: "男宝宝",
+      girls: "女宝宝",
+    },
+    units: {
+      cm: "cm",
+      month: "月",
+    },
+  },
   settings: {
     appearanceDesc: "自定义颜色主题与调色盘。",
     languageDesc: "选择你的显示语言。",
