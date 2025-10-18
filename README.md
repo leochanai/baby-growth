@@ -1,6 +1,6 @@
-# Orion Platform (猎户平台)
+# Baby Growth（宝宝生长跟踪）
 
-A minimal platform skeleton with theming, i18n, and pluggable apps.
+A minimal growth-tracking app with theming and i18n.
 
 ## Getting Started
 

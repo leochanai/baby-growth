@@ -42,7 +42,7 @@ const baseData = {
     avatar: "",
   },
   navMain: [
-    { title: "", url: "#", icon: IconDashboard },
+    { title: "", url: "/dashboard", icon: IconDashboard },
     { title: "", url: "#", icon: IconListDetails },
     { title: "", url: "#", icon: IconChartBar },
     { title: "", url: "#", icon: IconFolder },

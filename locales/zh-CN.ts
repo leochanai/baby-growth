@@ -2,7 +2,7 @@ import type { MessageSchema } from "./en"
 
 export const zhCN: MessageSchema = {
   common: {
-    appName: "猎户平台",
+    appName: "宝宝生长跟踪",
     settings: "设置",
     account: "账号",
     appearance: "外观",

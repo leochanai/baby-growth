@@ -1,6 +1,6 @@
 export const en = {
   common: {
-    appName: "Orion Platform",
+    appName: "Baby Growth",
     settings: "Settings",
     account: "Account",
     appearance: "Appearance",

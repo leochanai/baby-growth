@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Orion Platform",
-  description: "Orion Platform",
+  title: "Baby Growth（宝宝生长跟踪）",
+  description: "Baby Growth – 宝宝生长跟踪",
 };
 
 export default async function RootLayout({
