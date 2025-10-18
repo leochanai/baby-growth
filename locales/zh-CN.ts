@@ -28,7 +28,7 @@ export const zhCN: MessageSchema = {
   nav: {
     dashboard: "仪表盘",
     babies: "宝宝",
-    analytics: "分析",
+    analytics: "宝宝数据",
     projects: "项目",
     team: "团队",
     quickCreate: "快速创建",

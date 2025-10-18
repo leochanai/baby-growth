@@ -26,7 +26,7 @@ export const en = {
   nav: {
     dashboard: "Dashboard",
     babies: "Babies",
-    analytics: "Analytics",
+    analytics: "Baby Data",
     projects: "Projects",
     team: "Team",
     quickCreate: "Quick Create",

@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import {
   IconCamera,
-  IconChartBar,
+  IconGrowth,
   IconDashboard,
   IconDatabase,
   IconBabyBottle,
@@ -44,7 +44,7 @@ const baseData = {
   navMain: [
     { title: "", url: "/dashboard", icon: IconDashboard },
     { title: "", url: "/babies", icon: IconBabyBottle },
-    { title: "", url: "#", icon: IconChartBar },
+    { title: "", url: "/data", icon: IconGrowth },
     { title: "", url: "#", icon: IconFolder },
     { title: "", url: "#", icon: IconUsers },
   ],
