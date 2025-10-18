@@ -164,12 +164,114 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
   function replaceCssVarsWithColors(svgText: string) {
     const host = chartRef.current
     if (!host) return svgText
-    const style = getComputedStyle(host)
+    // Colors are defined on the inner [data-chart] element, not the host wrapper.
+    const chartEl = host.querySelector('[data-chart]') as HTMLElement | null
+    const style = chartEl ? getComputedStyle(chartEl) : getComputedStyle(host)
     // Replace all var(--color-*) with actual color values
     return svgText.replace(/var\(--color-([^)]+)\)/g, (_m, key) => {
       const val = style.getPropertyValue(`--color-${key}`).trim()
       return val || "#888"
     })
+  }
+
+  function buildLegendItems(): { key: string; label: string; color: string }[] {
+    const host = chartRef.current
+    if (!host) return []
+    const chartEl = host.querySelector('[data-chart]') as HTMLElement | null
+    const style = chartEl ? getComputedStyle(chartEl) : getComputedStyle(host)
+    const items: { key: string; label: string; color: string }[] = []
+    visibleBabies.forEach((b) => {
+      const k = `b${b.id}`
+      const color = style.getPropertyValue(`--color-${k}`).trim() || '#888'
+      items.push({ key: k, label: b.name, color })
+    })
+    if (who && (sex === 'MALE' || sex === 'FEMALE')) {
+      const color = style.getPropertyValue(`--color-WHO`).trim() || '#2ecc71'
+      items.push({ key: 'WHO', label: 'WHO', color })
+    }
+    return items
+  }
+
+  function appendSvgLegend(svg: SVGSVGElement) {
+    try {
+      const items = buildLegendItems()
+      if (!items.length) return
+      const vbAttr = svg.getAttribute('viewBox')
+      const [, , vbW, vbH] = vbAttr ? vbAttr.split(' ').map(Number) : [0, 0, svg.clientWidth || 800, svg.clientHeight || 400]
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g')
+      const padding = 8
+      const lineH = 16
+      const box = { x: 12, y: 12, w: 200, h: items.length * (lineH + 4) + padding * 2 }
+      const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+      bg.setAttribute('x', String(vbW - box.w - 12))
+      bg.setAttribute('y', String(12))
+      bg.setAttribute('width', String(box.w))
+      bg.setAttribute('height', String(box.h))
+      bg.setAttribute('rx', '6')
+      bg.setAttribute('fill', '#fff')
+      bg.setAttribute('fill-opacity', '0.85')
+      bg.setAttribute('stroke', '#e5e7eb')
+      bg.setAttribute('stroke-width', '1')
+      g.appendChild(bg)
+      items.forEach((it, idx) => {
+        const y = 12 + padding + idx * (lineH + 4)
+        const sw = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+        sw.setAttribute('x', String(vbW - box.w - 12 + padding))
+        sw.setAttribute('y', String(y))
+        sw.setAttribute('width', '10')
+        sw.setAttribute('height', '10')
+        sw.setAttribute('rx', '2')
+        sw.setAttribute('fill', it.color)
+        g.appendChild(sw)
+        const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text')
+        txt.setAttribute('x', String(vbW - box.w - 12 + padding + 14))
+        txt.setAttribute('y', String(y + 10))
+        txt.setAttribute('fill', '#111827')
+        txt.setAttribute('font-size', '12')
+        txt.setAttribute('font-family', 'system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif')
+        txt.textContent = it.label
+        g.appendChild(txt)
+      })
+      svg.appendChild(g)
+    } catch (e) {
+      // ignore legend failure in export
+    }
+  }
+
+  function appendSvgHeader(svg: SVGSVGElement) {
+    try {
+      const vbAttr = svg.getAttribute('viewBox')
+      const [, , vbW] = vbAttr ? vbAttr.split(' ').map(Number) : [0, 0, svg.clientWidth || 800]
+      const title = metric === 'height' ? t('charts.heightByAgeTitle') : t('charts.weightByAgeTitle')
+      const sexLabel = sex === 'all' ? t('charts.filters.all') : sex === 'MALE' ? t('charts.filters.boys') : t('charts.filters.girls')
+      const metricLabel = metric === 'height' ? t('charts.metric.height') : t('charts.metric.weight')
+      const subtitle = `${t('charts.export.sex')}: ${sexLabel} · ${t('charts.export.metric')}: ${metricLabel}`
+
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g')
+      const pad = 12
+      const titleText = document.createElementNS('http://www.w3.org/2000/svg', 'text')
+      titleText.setAttribute('x', String(pad))
+      titleText.setAttribute('y', String(pad + 14))
+      titleText.setAttribute('fill', '#111827')
+      titleText.setAttribute('font-size', '14')
+      titleText.setAttribute('font-weight', '600')
+      titleText.setAttribute('font-family', 'system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif')
+      titleText.textContent = title
+      g.appendChild(titleText)
+
+      const subText = document.createElementNS('http://www.w3.org/2000/svg', 'text')
+      subText.setAttribute('x', String(pad))
+      subText.setAttribute('y', String(pad + 14 + 16))
+      subText.setAttribute('fill', '#374151')
+      subText.setAttribute('font-size', '12')
+      subText.setAttribute('font-family', 'system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif')
+      subText.textContent = subtitle
+      g.appendChild(subText)
+
+      svg.appendChild(g)
+    } catch (e) {
+      // ignore
+    }
   }
 
   const exportSVG = React.useCallback(() => {
@@ -178,6 +280,8 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
     const svg = host.querySelector("svg") as SVGSVGElement | null
     if (!svg) return
     const clone = svg.cloneNode(true) as SVGSVGElement
+    appendSvgHeader(clone)
+    appendSvgLegend(clone)
     const raw = new XMLSerializer().serializeToString(clone)
     const inlined = replaceCssVarsWithColors(raw)
     const blob = new Blob([inlined], { type: "image/svg+xml;charset=utf-8" })
@@ -195,6 +299,8 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
     const svg = host.querySelector("svg") as SVGSVGElement | null
     if (!svg) return
     const clone = svg.cloneNode(true) as SVGSVGElement
+    appendSvgHeader(clone)
+    appendSvgLegend(clone)
     const raw = new XMLSerializer().serializeToString(clone)
     const inlined = replaceCssVarsWithColors(raw)
     const blob = new Blob([inlined], { type: "image/svg+xml;charset=utf-8" })
@@ -209,9 +315,12 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
     // Measure size from viewBox or bounding box
     const vb = svg.getAttribute("viewBox")?.split(" ").map(Number)
     const [vbX, vbY, vbW, vbH] = vb && vb.length === 4 ? vb : [0, 0, svg.clientWidth || 800, svg.clientHeight || 400]
+    // Reserve extra space at bottom for legend if present
+    const hasLegend = buildLegendItems().length > 0
+    const extraH = hasLegend ? 0 : 0 // legend already baked into cloned svg
     const canvas = document.createElement("canvas")
     canvas.width = Math.max(1, Math.floor(vbW * ratio))
-    canvas.height = Math.max(1, Math.floor(vbH * ratio))
+    canvas.height = Math.max(1, Math.floor((vbH + extraH) * ratio))
     const ctx = canvas.getContext("2d")!
     ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--color-bg") || "#ffffff"
     ctx.fillStyle = "#ffffff" // white background for readability

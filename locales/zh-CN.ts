@@ -105,7 +105,7 @@ export const zhCN: MessageSchema = {
       boys: "男宝宝",
       girls: "女宝宝",
     },
-    export: { label: "导出", png: "导出 PNG", svg: "导出 SVG" },
+    export: { label: "导出", png: "导出 PNG", svg: "导出 SVG", sex: "性别", metric: "指标" },
     legend: { selectAll: "全选", clear: "清空" },
     hint: { standardHiddenAll: "“全部”不显示标准线，请选择男/女查看。" },
     units: {

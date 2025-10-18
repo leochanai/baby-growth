@@ -104,7 +104,7 @@ export const en = {
       boys: "Boys",
       girls: "Girls",
     },
-    export: { label: "Export", png: "Export PNG", svg: "Export SVG" },
+    export: { label: "Export", png: "Export PNG", svg: "Export SVG", sex: "Sex", metric: "Metric" },
     legend: { selectAll: "Select All", clear: "Clear" },
     hint: { standardHiddenAll: "Standards hidden for 'All'. Choose a sex to view." },
     units: {
