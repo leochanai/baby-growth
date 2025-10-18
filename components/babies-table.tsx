@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { IconDotsVertical, IconPencil, IconPlus, IconTrash } from "@tabler/icons-react"
+import { IconDotsVertical, IconPencil, IconPlus, IconTrash, IconChevronsLeft, IconChevronLeft, IconChevronRight, IconChevronsRight } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
@@ -16,6 +16,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { BabyForm, type BabyFormValue } from "@/components/baby-form"
 import { useI18n } from "@/components/i18n-provider"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export type BabyRow = {
   id: number
@@ -30,6 +32,19 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
   const [rows, setRows] = React.useState<BabyRow[]>(initial)
   const [creating, setCreating] = React.useState(false)
   const [editing, setEditing] = React.useState<BabyRow | null>(null)
+  const [pageIndex, setPageIndex] = React.useState(0)
+  const [pageSize, setPageSize] = React.useState(10)
+
+  const pageCount = Math.max(1, Math.ceil(rows.length / pageSize))
+  React.useEffect(() => {
+    // clamp page when data or page size changes
+    setPageIndex((i) => Math.min(i, pageCount - 1))
+  }, [rows.length, pageSize])
+
+  const pageRows = React.useMemo(() => {
+    const start = pageIndex * pageSize
+    return rows.slice(start, start + pageSize)
+  }, [rows, pageIndex, pageSize])
 
   async function createOne(values: BabyFormValue) {
     setCreating(true)
@@ -72,7 +87,6 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
   return (
     <div className="w-full">
       <div className="content-x flex items-center justify-between py-2">
-        <div className="text-sm text-muted-foreground">{t("babies.count", { n: rows.length })}</div>
         <Dialog>
           <DialogTrigger asChild>
             <Button size="sm">
@@ -100,8 +114,9 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
         </Dialog>
       </div>
       <div className="content-x">
+        <div className="overflow-hidden rounded-lg border">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-muted sticky top-0 z-10">
             <TableRow>
               <TableHead className="w-[40%]">{t("babies.fields.name")}</TableHead>
               <TableHead className="w-[20%]">{t("babies.fields.gender")}</TableHead>
@@ -110,7 +125,7 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {rows.map((b) => (
+            {pageRows.map((b) => (
               <TableRow key={b.id}>
                 <TableCell>{b.name}</TableCell>
                 <TableCell>{b.gender === "MALE" ? t("babies.gender.male") : t("babies.gender.female")}</TableCell>
@@ -145,6 +160,73 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
             )}
           </TableBody>
         </Table>
+        </div>
+      </div>
+
+      {/* Pagination toolbar */}
+      <div className="content-x flex items-center justify-between py-2">
+        <div className="hidden flex-1 lg:block" />
+        <div className="flex w-full items-center gap-8 lg:w-fit">
+          <div className="hidden items-center gap-2 lg:flex">
+            <Label htmlFor="rows-per-page" className="text-sm font-medium">
+              {t("common.rowsPerPage")}
+            </Label>
+            <Select value={`${pageSize}`} onValueChange={(v) => setPageSize(Number(v))}>
+              <SelectTrigger size="sm" className="w-20" id="rows-per-page">
+                <SelectValue placeholder={pageSize} />
+              </SelectTrigger>
+              <SelectContent side="top">
+                {[10, 20, 30, 40, 50].map((ps) => (
+                  <SelectItem key={ps} value={`${ps}`}>{ps}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex w-fit items-center justify-center text-sm font-medium">
+            {t("common.paginationPageOf", { x: pageIndex + 1, y: pageCount })}
+          </div>
+          <div className="ml-auto flex items-center gap-2 lg:ml-0">
+            <Button
+              variant="outline"
+              className="hidden h-8 w-8 p-0 lg:flex"
+              onClick={() => setPageIndex(0)}
+              disabled={pageIndex === 0}
+            >
+              <span className="sr-only">Go to first page</span>
+              <IconChevronsLeft />
+            </Button>
+            <Button
+              variant="outline"
+              className="size-8"
+              size="icon"
+              onClick={() => setPageIndex((i) => Math.max(0, i - 1))}
+              disabled={pageIndex === 0}
+            >
+              <span className="sr-only">Go to previous page</span>
+              <IconChevronLeft />
+            </Button>
+            <Button
+              variant="outline"
+              className="size-8"
+              size="icon"
+              onClick={() => setPageIndex((i) => Math.min(pageCount - 1, i + 1))}
+              disabled={pageIndex >= pageCount - 1}
+            >
+              <span className="sr-only">Go to next page</span>
+              <IconChevronRight />
+            </Button>
+            <Button
+              variant="outline"
+              className="hidden size-8 lg:flex"
+              size="icon"
+              onClick={() => setPageIndex(pageCount - 1)}
+              disabled={pageIndex >= pageCount - 1}
+            >
+              <span className="sr-only">Go to last page</span>
+              <IconChevronsRight />
+            </Button>
+          </div>
+        </div>
       </div>
 
       <Dialog open={!!editing} onOpenChange={(v) => !v && setEditing(null)}>

@@ -1,73 +1,29 @@
 "use client"
 
 import * as React from "react"
-import { createPortal } from "react-dom"
+import * as PopoverPrimitive from "@radix-ui/react-popover"
 import { cn } from "@/lib/utils"
 
-type Ctx = {
-  open: boolean
-  setOpen: (v: boolean) => void
-  triggerRef: React.RefObject<HTMLElement>
-}
+const Popover = PopoverPrimitive.Root
+const PopoverTrigger = PopoverPrimitive.Trigger
 
-const PopoverContext = React.createContext<Ctx | null>(null)
+const PopoverContent = React.forwardRef<
+  React.ElementRef<typeof PopoverPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
+>(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
+  <PopoverPrimitive.Portal>
+    <PopoverPrimitive.Content
+      ref={ref}
+      align={align}
+      sideOffset={sideOffset}
+      className={cn(
+        "bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-auto rounded-md border p-0 shadow-md outline-none",
+        className
+      )}
+      {...props}
+    />
+  </PopoverPrimitive.Portal>
+))
+PopoverContent.displayName = PopoverPrimitive.Content.displayName
 
-export function Popover({ open: openProp, onOpenChange, children }: { open?: boolean; onOpenChange?: (v: boolean) => void; children: React.ReactNode }) {
-  const [internal, setInternal] = React.useState(false)
-  const open = openProp ?? internal
-  const setOpen = React.useCallback((v: boolean) => {
-    onOpenChange ? onOpenChange(v) : setInternal(v)
-  }, [onOpenChange])
-  const triggerRef = React.useRef<HTMLElement>(null)
-  const value = React.useMemo(() => ({ open, setOpen, triggerRef }), [open, setOpen])
-  return <PopoverContext.Provider value={value}>{children}</PopoverContext.Provider>
-}
-
-export function PopoverTrigger({ asChild = false, children }: { asChild?: boolean; children: React.ReactElement }) {
-  const ctx = React.useContext(PopoverContext)!
-  const child = React.Children.only(children)
-  const props = {
-    ref: ctx.triggerRef as any,
-    onClick: (e: any) => {
-      child.props.onClick?.(e)
-      ctx.setOpen(!ctx.open)
-    },
-    'aria-haspopup': 'dialog',
-    'aria-expanded': ctx.open,
-  }
-  return asChild ? React.cloneElement(child, props) : React.createElement('button', props, child)
-}
-
-export function PopoverContent({ className, children }: { className?: string; children: React.ReactNode }) {
-  const ctx = React.useContext(PopoverContext)!
-  const [pos, setPos] = React.useState<{ top: number; left: number; width: number }>({ top: 0, left: 0, width: 0 })
-
-  React.useEffect(() => {
-    if (!ctx.open) return
-    const el = ctx.triggerRef.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    setPos({ top: rect.bottom + window.scrollY + 6, left: rect.left + window.scrollX, width: rect.width })
-    function onDoc(e: MouseEvent) {
-      const target = e.target as Node
-      if (el.contains(target)) return
-      ctx.setOpen(false)
-    }
-    window.addEventListener('resize', () => ctx.setOpen(false), { once: true })
-    document.addEventListener('mousedown', onDoc)
-    return () => document.removeEventListener('mousedown', onDoc)
-  }, [ctx.open])
-
-  if (!ctx.open) return null
-  return createPortal(
-    <div
-      className={cn("z-50 rounded-md border bg-popover text-popover-foreground shadow-md", className)}
-      style={{ position: 'absolute', top: pos.top, left: pos.left, minWidth: pos.width }}
-      role="dialog"
-    >
-      {children}
-    </div>,
-    document.body
-  )
-}
-
+export { Popover, PopoverTrigger, PopoverContent }

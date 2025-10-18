@@ -14,6 +14,8 @@ export const en = {
     delete: "Delete",
     pickDate: "Pick a date",
     cancel: "Cancel",
+    rowsPerPage: "Rows per page",
+    paginationPageOf: "Page {x} of {y}",
   },
   menu: {
     account: "Account",

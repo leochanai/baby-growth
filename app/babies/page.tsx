@@ -15,6 +15,9 @@ export default async function BabiesPage() {
     select: { id: true, name: true, gender: true, birthDate: true },
   })
   const initial = babies.map((b) => ({ ...b, birthDate: b.birthDate.toISOString() }))
-  return <BabiesTable initial={initial} />
+  return (
+    <div className="content-y">
+      <BabiesTable initial={initial} />
+    </div>
+  )
 }
-

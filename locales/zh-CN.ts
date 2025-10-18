@@ -16,6 +16,8 @@ export const zhCN: MessageSchema = {
     delete: "删除",
     pickDate: "选择日期",
     cancel: "取消",
+    rowsPerPage: "每页行数",
+    paginationPageOf: "第 {x} 页，共 {y} 页",
   },
   menu: {
     account: "账号",

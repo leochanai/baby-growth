@@ -1,78 +1,45 @@
 "use client"
 
 import * as React from "react"
-import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
-import { Button } from "@/components/ui/button"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import { DayPicker } from "react-day-picker"
 import { cn } from "@/lib/utils"
 
-type Props = {
-  mode?: "single"
-  selected?: Date
-  onSelect?: (date?: Date) => void
-  disabled?: (date: Date) => boolean
-  className?: string
-}
+export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
-export function Calendar({ mode = "single", selected, onSelect, disabled, className }: Props) {
-  const today = new Date()
-  const [view, setView] = React.useState<Date>(selected ?? today)
-
-  function startOfMonth(d: Date) {
-    return new Date(d.getFullYear(), d.getMonth(), 1)
-  }
-  function daysInMonth(d: Date) {
-    return new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate()
-  }
-  const first = startOfMonth(view)
-  const firstWeekday = (first.getDay() + 7) % 7 // 0=Sun
-  const total = daysInMonth(view)
-  const weeks: (Date | null)[][] = []
-  let week: (Date | null)[] = new Array(firstWeekday).fill(null)
-  for (let i = 1; i <= total; i++) {
-    week.push(new Date(view.getFullYear(), view.getMonth(), i))
-    if (week.length === 7) { weeks.push(week); week = [] }
-  }
-  if (week.length) { while (week.length < 7) week.push(null); weeks.push(week) }
-
-  function isSameDay(a?: Date | null, b?: Date | null) {
-    if (!a || !b) return false
-    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
-  }
-
+export function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
   return (
-    <div className={cn("p-2 w-[280px]", className)}>
-      <div className="flex items-center justify-between px-2 py-1">
-        <Button variant="ghost" size="icon" className="size-7" onClick={() => setView(new Date(view.getFullYear(), view.getMonth() - 1, 1))}>
-          <IconChevronLeft className="size-4" />
-          <span className="sr-only">Prev</span>
-        </Button>
-        <div className="text-sm font-medium">
-          {view.getFullYear()}-{String(view.getMonth() + 1).padStart(2, '0')}
-        </div>
-        <Button variant="ghost" size="icon" className="size-7" onClick={() => setView(new Date(view.getFullYear(), view.getMonth() + 1, 1))}>
-          <IconChevronRight className="size-4" />
-          <span className="sr-only">Next</span>
-        </Button>
-      </div>
-      <div className="grid grid-cols-7 gap-1 px-2 text-center text-xs text-muted-foreground">
-        {['Su','Mo','Tu','We','Th','Fr','Sa'].map((d) => (<div key={d}>{d}</div>))}
-      </div>
-      <div className="grid grid-cols-7 gap-1 p-2">
-        {weeks.flat().map((d, idx) => (
-          <button
-            key={idx}
-            disabled={!d || (disabled?.(d) ?? false)}
-            onClick={() => d && onSelect?.(d)}
-            className={cn(
-              "h-8 rounded-md text-sm hover:bg-accent hover:text-accent-foreground disabled:opacity-40 disabled:cursor-not-allowed",
-              isSameDay(d, selected) && "bg-primary text-primary-foreground hover:bg-primary/90"
-            )}
-          >
-            {d ? d.getDate() : ''}
-          </button>
-        ))}
-      </div>
-    </div>
+    <DayPicker
+      showOutsideDays={showOutsideDays}
+      className={cn("p-3", className)}
+      classNames={{
+        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+        month: "space-y-4",
+        caption: "flex justify-center pt-1 relative items-center",
+        caption_label: "text-sm font-medium",
+        nav: "space-x-1 flex items-center",
+        nav_button: "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+        nav_button_previous: "absolute left-1",
+        nav_button_next: "absolute right-1",
+        table: "w-full border-collapse space-y-1",
+        head_row: "flex",
+        head_cell: "text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]",
+        row: "flex w-full mt-2",
+        cell: "h-8 w-8 text-center text-sm p-0 relative [&:has([aria-selected].day)]:bg-accent [&:has([aria-selected].day)]:rounded-md",
+        day: "day h-8 w-8 p-0 font-normal aria-selected:opacity-100",
+        day_selected: "bg-primary text-primary-foreground hover:bg-primary/90 focus:bg-primary focus:text-primary-foreground",
+        day_today: "bg-accent text-accent-foreground",
+        day_outside: "text-muted-foreground opacity-50",
+        day_disabled: "text-muted-foreground opacity-50",
+        day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
+        day_hidden: "invisible",
+        ...classNames,
+      }}
+      components={{
+        IconLeft: () => <ChevronLeft className="size-4" />,
+        IconRight: () => <ChevronRight className="size-4" />,
+      }}
+      {...props}
+    />
   )
 }
-
