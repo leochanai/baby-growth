@@ -10,7 +10,8 @@
     "lint": "eslint",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init",
-    "import:baby-data": "node scripts/import-baby-data.js"
+    "import:baby-data": "node scripts/import-baby-data.js",
+    "import:who": "node scripts/import-who.js"
   },
   "description": "Baby Growth (宝宝生长跟踪): a minimal growth-tracking app with theming and i18n.",
   "dependencies": {

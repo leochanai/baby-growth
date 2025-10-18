@@ -32,6 +32,8 @@ export function ChartAreaInteractive({ babies, data, metric = "height" }: { babi
   const { t } = useI18n()
   type Filter = "all" | "MALE" | "FEMALE"
   const [filter, setFilter] = React.useState<Filter>("all")
+  const [who, setWho] = React.useState<{ monthAge: number; value: number }[] | null>(null)
+  const [whoLoading, setWhoLoading] = React.useState(false)
 
   // nothing
 
@@ -40,8 +42,33 @@ export function ChartAreaInteractive({ babies, data, metric = "height" }: { babi
     return babies.filter((b) => (b.gender || "").toUpperCase() === filter)
   }, [babies, filter])
 
+  // Fetch WHO medians when a gender filter is selected
+  React.useEffect(() => {
+    if (filter !== "MALE" && filter !== "FEMALE") {
+      setWho(null)
+      return
+    }
+    const controller = new AbortController()
+    const gender = filter === "MALE" ? "male" : "female"
+    setWhoLoading(true)
+    fetch(`/api/who-data?gender=${gender}`, { signal: controller.signal })
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error("failed"))))
+      .then((items: { monthAge: number; heightMedianCm: number; weightMedianKg: number }[]) => {
+        const mapped = items
+          .map((i) => ({
+            monthAge: i.monthAge,
+            value: metric === "height" ? i.heightMedianCm : i.weightMedianKg,
+          }))
+          .sort((a, b) => a.monthAge - b.monthAge)
+        setWho(mapped)
+      })
+      .catch(() => setWho(null))
+      .finally(() => setWhoLoading(false))
+    return () => controller.abort()
+  }, [metric, filter])
+
   // Build pivoted dataset: one series per baby key
-  const { pivot, config } = React.useMemo(() => {
+  const { pivot, config, minMonth, maxMonth } = React.useMemo(() => {
     const keys: string[] = []
     const cfg: ChartConfig = {}
     const colorPool = [210, 340, 25, 270, 140, 0, 45, 180]
@@ -55,12 +82,22 @@ export function ChartAreaInteractive({ babies, data, metric = "height" }: { babi
     })
 
     // collect all months present in selected babies
-    const monthsSet = new Set<number>()
+    const babyMonthsSet = new Set<number>()
     data.forEach((r) => {
       if (!byBaby.has(r.babyId)) return
-      monthsSet.add(r.monthAge)
+      babyMonthsSet.add(r.monthAge)
     })
+    const monthsSet = new Set<number>(babyMonthsSet)
+    if (who && (filter === "MALE" || filter === "FEMALE") && babyMonthsSet.size > 0) {
+      const maxBabyMonth = Math.max(...Array.from(babyMonthsSet))
+      for (const item of who) if (item.monthAge <= maxBabyMonth) monthsSet.add(item.monthAge)
+      // configure WHO series (green)
+      cfg["WHO"] = { label: "WHO", color: "hsl(145, 65%, 42%)" }
+      keys.push("WHO")
+    }
     const months = Array.from(monthsSet).sort((a, b) => a - b)
+    const minMonth = months.length ? months[0] : 0
+    const maxMonth = months.length ? months[months.length - 1] : 0
 
     const rows = months.map((m) => {
       const row: any = { month: m }
@@ -70,11 +107,15 @@ export function ChartAreaInteractive({ babies, data, metric = "height" }: { babi
         const val = metric === "height" ? found?.heightCm : found?.weightKg
         row[key] = val ?? null
       })
+      if (who && (filter === "MALE" || filter === "FEMALE")) {
+        const w = who.find((x) => x.monthAge === m)?.value
+        row["WHO"] = typeof w === "number" ? w : null
+      }
       return row
     })
 
-    return { pivot: rows, config: cfg }
-  }, [groupBabies, data, metric])
+    return { pivot: rows, config: cfg, minMonth, maxMonth }
+  }, [groupBabies, data, metric, who, filter])
 
   return (
     <Card className="@container/card">
@@ -100,6 +141,9 @@ export function ChartAreaInteractive({ babies, data, metric = "height" }: { babi
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
+              type="number"
+              domain={[minMonth, maxMonth]}
+              allowDecimals={false}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
@@ -134,9 +178,20 @@ export function ChartAreaInteractive({ babies, data, metric = "height" }: { babi
                 stroke={`var(--color-b${b.id})`}
                 dot={false}
                 strokeWidth={2}
+                connectNulls
                 isAnimationActive={false}
               />
             ))}
+            {who && (filter === "MALE" || filter === "FEMALE") ? (
+              <Line
+                type="monotone"
+                dataKey="WHO"
+                stroke={`var(--color-WHO)`}
+                dot={false}
+                strokeWidth={2}
+                isAnimationActive={false}
+              />
+            ) : null}
             <ChartLegend verticalAlign="bottom" content={<ChartLegendContent />} />
           </LineChart>
         </ChartContainer>
