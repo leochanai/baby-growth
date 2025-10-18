@@ -19,6 +19,8 @@ export const en = {
     analytics: "Analytics",
     projects: "Projects",
     team: "Team",
+    quickCreate: "Quick Create",
+    inbox: "Inbox",
     getHelp: "Get Help",
     search: "Search",
     clouds: {

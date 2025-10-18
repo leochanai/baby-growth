@@ -5,8 +5,6 @@ import type { Session } from "next-auth"
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
-import { cookies } from "next/headers"
-import { dictionaries } from "@/locales"
 
 export default async function AccountLayout({
   children,
@@ -25,7 +23,7 @@ export default async function AccountLayout({
     >
       <AppSidebar variant="inset" />
       <SidebarInset>
-        <SiteHeader title={(cookies().get("lang")?.value === "zh-CN" ? dictionaries["zh-CN"] : dictionaries["en"]).common.account} />
+        <SiteHeader titleKey="common.account" />
         {children}
       </SidebarInset>
     </SidebarProvider>

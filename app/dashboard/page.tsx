@@ -9,12 +9,8 @@ import {
 } from "@/components/ui/sidebar"
 
 import data from "./data.json"
-import { cookies } from "next/headers"
-import { dictionaries } from "@/locales"
 
 export default function Page() {
-  const lang = cookies().get("lang")?.value === "zh-CN" ? "zh-CN" : "en"
-  const dict = dictionaries[lang] ?? dictionaries["en"]
   return (
     <SidebarProvider
       style={
@@ -26,7 +22,7 @@ export default function Page() {
     >
       <AppSidebar variant="inset" />
       <SidebarInset>
-        <SiteHeader title={dict.nav.dashboard} />
+        <SiteHeader titleKey="nav.dashboard" />
         <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">

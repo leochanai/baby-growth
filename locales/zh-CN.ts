@@ -21,6 +21,8 @@ export const zhCN: MessageSchema = {
     analytics: "分析",
     projects: "项目",
     team: "团队",
+    quickCreate: "快速创建",
+    inbox: "收件箱",
     getHelp: "获取帮助",
     search: "搜索",
     clouds: {
