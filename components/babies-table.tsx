@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { IconDotsVertical, IconPencil, IconPlus, IconTrash, IconChevronsLeft, IconChevronLeft, IconChevronRight, IconChevronsRight } from "@tabler/icons-react"
+import { IconDotsVertical, IconPencil, IconPlus, IconTrash, IconChevronsLeft, IconChevronLeft, IconChevronRight, IconChevronsRight, IconChevronUp, IconChevronDown } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
@@ -34,6 +34,7 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
   const [editing, setEditing] = React.useState<BabyRow | null>(null)
   const [pageIndex, setPageIndex] = React.useState(0)
   const [pageSize, setPageSize] = React.useState(10)
+  const [sortDir, setSortDir] = React.useState<"asc" | "desc">("desc")
 
   const pageCount = Math.max(1, Math.ceil(rows.length / pageSize))
   React.useEffect(() => {
@@ -41,10 +42,20 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
     setPageIndex((i) => Math.min(i, pageCount - 1))
   }, [rows.length, pageSize])
 
+  const sortedRows = React.useMemo(() => {
+    const s = [...rows]
+    s.sort((a, b) => {
+      const ta = new Date(a.birthDate).getTime()
+      const tb = new Date(b.birthDate).getTime()
+      return sortDir === "asc" ? ta - tb : tb - ta
+    })
+    return s
+  }, [rows, sortDir])
+
   const pageRows = React.useMemo(() => {
     const start = pageIndex * pageSize
-    return rows.slice(start, start + pageSize)
-  }, [rows, pageIndex, pageSize])
+    return sortedRows.slice(start, start + pageSize)
+  }, [sortedRows, pageIndex, pageSize])
 
   function calcMonthAgeParts(birthISO: string, now = new Date()) {
     const b = new Date(birthISO)
@@ -138,7 +149,22 @@ export function BabiesTable({ initial }: { initial: BabyRow[] }) {
             <TableRow>
               <TableHead className="w-[35%]">{t("babies.fields.name")}</TableHead>
               <TableHead className="w-[15%]">{t("babies.fields.gender")}</TableHead>
-              <TableHead className="w-[20%]">{t("babies.fields.birthDate")}</TableHead>
+              <TableHead className="w-[20%]">
+                <button
+                  type="button"
+                  aria-sort={sortDir === "asc" ? "ascending" : "descending"}
+                  onClick={() => setSortDir((d) => (d === "desc" ? "asc" : "desc"))}
+                  className="hover:bg-muted inline-flex items-center gap-1 rounded px-1 py-0.5 text-left text-sm"
+                  title={t("babies.fields.birthDate")}
+                >
+                  <span>{t("babies.fields.birthDate")}</span>
+                  {sortDir === "asc" ? (
+                    <IconChevronUp className="size-4" />
+                  ) : (
+                    <IconChevronDown className="size-4" />
+                  )}
+                </button>
+              </TableHead>
               <TableHead className="w-[15%]">{t("babies.fields.monthAge")}</TableHead>
               <TableHead className="w-[15%] text-right">{t("common.actions")}</TableHead>
             </TableRow>
