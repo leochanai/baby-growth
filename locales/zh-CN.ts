@@ -19,6 +19,25 @@ export const zhCN: MessageSchema = {
     rowsPerPage: "每页行数",
     paginationPageOf: "第 {x} 页，共 {y} 页",
   },
+  babyData: {
+    add: "新增记录",
+    edit: "编辑记录",
+    addDesc: "创建宝宝数据记录。",
+    editDesc: "更新宝宝数据记录。",
+    empty: "暂无数据",
+    fields: {
+      baby: "宝宝",
+      monthAge: "月龄",
+      heightCm: "身高（cm）",
+      weightKg: "体重（kg）",
+    },
+    form: { invalid: "请正确填写表单" },
+    errors: {
+      duplicate: "该宝宝该月龄的记录已存在。",
+      createFailed: "创建失败",
+      updateFailed: "更新失败",
+    },
+  },
   menu: {
     account: "账号",
     billing: "账单",

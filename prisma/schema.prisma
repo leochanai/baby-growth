@@ -30,5 +30,23 @@ model Baby {
 
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  // Relations
+  data      BabyData[]
+
   @@index([userId])
+}
+
+model BabyData {
+  id        Int      @id @default(autoincrement())
+  babyId    Int
+  monthAge  Int
+  heightCm  Float
+  weightKg  Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  baby      Baby     @relation(fields: [babyId], references: [id], onDelete: Cascade)
+
+  @@index([babyId])
+  @@unique([babyId, monthAge])
 }

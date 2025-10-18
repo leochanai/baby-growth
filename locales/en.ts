@@ -17,6 +17,25 @@ export const en = {
     rowsPerPage: "Rows per page",
     paginationPageOf: "Page {x} of {y}",
   },
+  babyData: {
+    add: "Add Record",
+    edit: "Edit Record",
+    addDesc: "Create a baby data record.",
+    editDesc: "Update baby data record.",
+    empty: "No data yet",
+    fields: {
+      baby: "Baby",
+      monthAge: "Month Age",
+      heightCm: "Height (cm)",
+      weightKg: "Weight (kg)",
+    },
+    form: { invalid: "Please complete the form correctly." },
+    errors: {
+      duplicate: "A record for this month age already exists for this baby.",
+      createFailed: "Create failed",
+      updateFailed: "Update failed",
+    },
+  },
   menu: {
     account: "Account",
     billing: "Billing",
