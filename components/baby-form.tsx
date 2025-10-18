@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ChevronDown as ChevronDownIcon } from "lucide-react"
+import { ChevronDownIcon, CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useI18n } from "@/components/i18n-provider"
+import { cn } from "@/lib/utils"
 
 const formSchema = z.object({
   name: z.string().trim().min(1).max(50),
@@ -81,8 +82,8 @@ export function BabyForm({
           </SelectContent>
         </Select>
       </div>
-      <div className="flex flex-col gap-3">
-        <Label htmlFor="baby-birth" className="px-1">
+      <div className="grid gap-2">
+        <Label htmlFor="baby-birth">
           {t("babies.fields.birthDate")}
         </Label>
         <Popover open={open} onOpenChange={setOpen}>
@@ -90,12 +91,15 @@ export function BabyForm({
             <Button
               variant="outline"
               id="baby-birth"
-              className="w-48 justify-between font-normal"
+              className={cn(
+                "w-full justify-start text-left font-normal",
+                !form.birthDate && "text-muted-foreground"
+              )}
             >
+              <CalendarIcon className="mr-2 h-4 w-4" />
               {form.birthDate
                 ? new Date(form.birthDate).toLocaleDateString()
-                : "Select date"}
-              <ChevronDownIcon />
+                : t("common.pickDate")}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto overflow-hidden p-0" align="start">
@@ -103,13 +107,11 @@ export function BabyForm({
               mode="single"
               selected={form.birthDate ? new Date(form.birthDate) : undefined}
               captionLayout="dropdown"
-              onSelect={(d) => {
-                setOpen(false)
-                if (!d) return
-                const val = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
+              onSelect={(date) => {
+                setForm({ ...form, birthDate: date ? new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
                   .toISOString()
-                  .slice(0, 10)
-                setForm({ ...form, birthDate: val })
+                  .slice(0, 10) : "" })
+                setOpen(false)
               }}
             />
           </PopoverContent>
