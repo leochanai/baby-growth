@@ -55,7 +55,8 @@ export async function PATCH(req: Request) {
     try {
       const current = await prisma.user.findUnique({ where: { email: session.user.email }, select: { image: true } })
       if (current?.image && current.image.startsWith("/avatars/")) {
-        const fsPath = require("path").join(process.cwd(), "public", current.image)
+        const prevRel = current.image.replace(/^\//, "")
+        const fsPath = require("path").join(process.cwd(), "public", prevRel)
         await (await import("fs/promises")).unlink(fsPath).catch(() => {})
       }
     } catch {}

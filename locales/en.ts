@@ -67,7 +67,7 @@ export const en = {
       saveChanges: "Save changes",
       errors: {
         formats: "Only PNG/JPEG/WebP are allowed",
-        maxSize: "Max size 2MB",
+        maxSize: "Max size 5MB",
         updateFailed: "Update failed",
         uploadFailed: "Upload failed",
         saveFailed: "Save failed",

@@ -8,7 +8,7 @@ import { prisma } from "@/lib/prisma"
 export const runtime = "nodejs"
 
 const ALLOWED = new Set(["image/png", "image/jpeg", "image/webp"])
-const MAX_SIZE = 2 * 1024 * 1024
+const MAX_SIZE = 5 * 1024 * 1024
 
 export async function POST(req: Request) {
   const session = (await getServerSession()) as Session | null
@@ -28,8 +28,9 @@ export async function POST(req: Request) {
 
   const ext = file.type === "image/png" ? ".png" : file.type === "image/webp" ? ".webp" : ".jpg"
   const fname = `${Date.now()}${ext}`
-  const rel = path.posix.join("/avatars", dbUser.id, fname)
-  const outPath = path.join(process.cwd(), "public", rel)
+  // Build a filesystem-relative path under public without leading slash
+  const relFs = path.posix.join("avatars", String(dbUser.id), fname)
+  const outPath = path.join(process.cwd(), "public", relFs)
   await fs.mkdir(path.dirname(outPath), { recursive: true })
   const buf = Buffer.from(await file.arrayBuffer())
   await fs.writeFile(outPath, buf)
@@ -37,10 +38,12 @@ export async function POST(req: Request) {
   try {
     const prev = dbUser.image
     if (prev && prev.startsWith("/avatars/")) {
-      const prevPath = path.join(process.cwd(), "public", prev)
+      // prev is a URL-like "/avatars/..."; strip leading slash for filesystem join
+      const prevRel = prev.replace(/^\//, "")
+      const prevPath = path.join(process.cwd(), "public", prevRel)
       await fs.unlink(prevPath).catch(() => {})
     }
   } catch {}
-
-  return NextResponse.json({ url: rel })
+  // Return app-relative URL (with leading slash)
+  return NextResponse.json({ url: `/${relFs}` })
 }

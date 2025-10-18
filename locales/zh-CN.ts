@@ -69,7 +69,7 @@ export const zhCN: MessageSchema = {
       saveChanges: "保存更改",
       errors: {
         formats: "仅支持 PNG/JPEG/WebP",
-        maxSize: "最大 2MB",
+        maxSize: "最大 5MB",
         updateFailed: "更新失败",
         uploadFailed: "上传失败",
         saveFailed: "保存失败",
