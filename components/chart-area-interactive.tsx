@@ -353,13 +353,13 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
         <CardAction className="flex items-center gap-2">
           {/* Sex segmented control */}
           <ToggleGroup type="single" variant="outline" value={sex} onValueChange={(v) => v && setSex(v as SexFilter)} size="sm" className="bg-transparent">
-            <ToggleGroupItem value="all" aria-label={t("charts.filters.all")} className="data-[state=on]:bg-accent/60 data-[state=on]:text-accent-foreground hover:bg-accent/40">
+            <ToggleGroupItem value="all" aria-label={t("charts.filters.all")} className="data-[state=on]:bg-accent/60 data-[state=on]:text-accent-foreground hover:bg-accent/40 min-w-fit px-3">
               {t("charts.filters.all")}
             </ToggleGroupItem>
-            <ToggleGroupItem value="MALE" aria-label={t("charts.filters.boys")} className="data-[state=on]:bg-accent/60 data-[state=on]:text-accent-foreground hover:bg-accent/40">
+            <ToggleGroupItem value="MALE" aria-label={t("charts.filters.boys")} className="data-[state=on]:bg-accent/60 data-[state=on]:text-accent-foreground hover:bg-accent/40 min-w-fit px-3">
               {t("charts.filters.boys")}
             </ToggleGroupItem>
-            <ToggleGroupItem value="FEMALE" aria-label={t("charts.filters.girls")} className="data-[state=on]:bg-accent/60 data-[state=on]:text-accent-foreground hover:bg-accent/40">
+            <ToggleGroupItem value="FEMALE" aria-label={t("charts.filters.girls")} className="data-[state=on]:bg-accent/60 data-[state=on]:text-accent-foreground hover:bg-accent/40 min-w-fit px-3">
               {t("charts.filters.girls")}
             </ToggleGroupItem>
           </ToggleGroup>
