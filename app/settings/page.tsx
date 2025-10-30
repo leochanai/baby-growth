@@ -34,20 +34,60 @@ export default function SettingsPage() {
   const [savingHome, setSavingHome] = useState(false)
   const [homeError, setHomeError] = useState<string | null>(null)
 
+  // 保存设置到数据库的函数
+  const saveSetting = async (key: "theme" | "palette" | "language", value: string) => {
+    if (!session?.user?.email) return // 未登录时不保存
+    try {
+      await fetch("/api/account", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ [key]: value }),
+      })
+    } catch {}
+  }
+
+  // 包装setTheme以自动保存
+  const handleThemeChange = (v: string) => {
+    setTheme(v)
+    saveSetting("theme", v)
+  }
+
+  // 包装setPalette以自动保存
+  const handlePaletteChange = (v: string) => {
+    setPalette(v as any)
+    saveSetting("palette", v)
+  }
+
+  // 包装setLanguage以自动保存
+  const handleLanguageChange = (v: string) => {
+    setLanguage(v as any)
+    saveSetting("language", v)
+  }
+
+  // 只在首次加载时从数据库读取设置
+  const [initialLoad, setInitialLoad] = useState(false)
   useEffect(() => {
+    if (!session?.user?.email || initialLoad) return
     let ignore = false
     ;(async () => {
       try {
         const res = await fetch("/api/account", { cache: "no-store" })
         if (!res.ok) return
         const user = await res.json()
-        if (!ignore) setFamilyName(user?.familyName ?? "")
+        if (!ignore && mounted) {
+          setFamilyName(user?.familyName ?? "")
+          // 如果有数据库设置且本地状态为空或默认值，则从数据库加载
+          if (user?.theme) setTheme(user.theme as any)
+          if (user?.palette) setPalette(user.palette as any)
+          if (user?.language) setLanguage(user.language as any)
+          setInitialLoad(true)
+        }
       } catch {}
     })()
     return () => {
       ignore = true
     }
-  }, [])
+  }, [session, mounted, initialLoad])
 
   return (
     <div className="content-x content-y">
@@ -104,7 +144,7 @@ export default function SettingsPage() {
             <div className="flex flex-col gap-2">
             <Label htmlFor="theme-mode">{t("settings.themeMode")}</Label>
             {mounted ? (
-              <Select value={theme as string} onValueChange={(v) => setTheme(v)}>
+              <Select value={theme as string} onValueChange={handleThemeChange}>
                 <SelectTrigger id="theme-mode" className="w-[220px]"><SelectValue placeholder={t("settings.selectMode")} /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="light">{t("settings.mode.light")}</SelectItem>
@@ -120,7 +160,7 @@ export default function SettingsPage() {
           <div className="flex flex-col gap-2">
             <Label htmlFor="palette">{t("settings.palette")}</Label>
             {mounted ? (
-              <Select value={palette} onValueChange={(v) => setPalette(v as any)}>
+              <Select value={palette} onValueChange={handlePaletteChange}>
                 <SelectTrigger id="palette" className="w-[220px]"><SelectValue placeholder={t("settings.selectPalette")} /></SelectTrigger>
                 <SelectContent>
                   {palettes.map((p) => (
@@ -144,7 +184,7 @@ export default function SettingsPage() {
             <div className="flex flex-col gap-2">
             <Label htmlFor="language">{t("settings.languageLabel")}</Label>
             {mounted ? (
-              <Select value={language} onValueChange={(v) => setLanguage(v as any)}>
+              <Select value={language} onValueChange={handleLanguageChange}>
                 <SelectTrigger id="language" className="w-[220px]"><SelectValue placeholder={t("settings.languageDesc")} /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="en">{t("settings.languages.en")}</SelectItem>

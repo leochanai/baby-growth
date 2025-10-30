@@ -14,7 +14,7 @@ export async function GET() {
   }
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
-    select: { id: true, name: true, familyName: true, email: true, image: true, createdAt: true, updatedAt: true },
+    select: { id: true, name: true, familyName: true, email: true, image: true, theme: true, palette: true, language: true, createdAt: true, updatedAt: true },
   })
   return NextResponse.json(user)
 }
@@ -36,6 +36,17 @@ const patchSchema = z.object({
         message: "Invalid image path",
       }
     ),
+  theme: z.enum(["light", "dark", "system"]).optional(),
+  palette: z.enum([
+    "theme-default",
+    "theme-red",
+    "theme-orange",
+    "theme-green",
+    "theme-blue",
+    "theme-yellow",
+    "theme-violet",
+  ]).optional(),
+  language: z.enum(["en", "zh-CN"]).optional(),
 })
 
 export async function PATCH(req: Request) {
@@ -48,10 +59,13 @@ export async function PATCH(req: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 })
   }
-  const data: { name?: string; familyName?: string | null; image?: string | null } = {}
+  const data: { name?: string; familyName?: string | null; image?: string | null; theme?: string | null; palette?: string | null; language?: string | null } = {}
   if (parsed.data.name !== undefined) data.name = parsed.data.name
   if (parsed.data.familyName !== undefined) data.familyName = parsed.data.familyName || null
   if (parsed.data.image !== undefined) data.image = parsed.data.image || null
+  if (parsed.data.theme !== undefined) data.theme = parsed.data.theme || null
+  if (parsed.data.palette !== undefined) data.palette = parsed.data.palette || null
+  if (parsed.data.language !== undefined) data.language = parsed.data.language || null
   // If image is being removed, delete previous local file (best effort)
   if (parsed.data.image === "") {
     try {
@@ -67,7 +81,7 @@ export async function PATCH(req: Request) {
   const user = await prisma.user.update({
     where: { email: session.user.email },
     data,
-    select: { id: true, name: true, familyName: true, email: true, image: true, createdAt: true, updatedAt: true },
+    select: { id: true, name: true, familyName: true, email: true, image: true, theme: true, palette: true, language: true, createdAt: true, updatedAt: true },
   })
 
   return NextResponse.json(user)

@@ -7,9 +7,9 @@ import { LanguageProvider, type Language } from "@/components/language-provider"
 import { I18nProvider } from "@/components/i18n-provider"
 import type { MessageSchema } from "@/locales"
 
-export function Providers({ children, initialPalette, initialLanguage = "en", initialMessages }: { children: React.ReactNode, initialPalette: string, initialLanguage?: Language, initialMessages: MessageSchema }) {
+export function Providers({ children, initialPalette, initialLanguage = "en", initialMessages, initialTheme }: { children: React.ReactNode, initialPalette: string, initialLanguage?: Language, initialMessages: MessageSchema, initialTheme?: "light" | "dark" | "system" }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <ThemeProvider attribute="class" defaultTheme={initialTheme ?? "system"} enableSystem disableTransitionOnChange>
       <LanguageProvider initialLanguage={initialLanguage}>
         <I18nProvider initialMessages={initialMessages}>
           <PaletteProvider initialPalette={initialPalette as any}>
