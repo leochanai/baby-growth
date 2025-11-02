@@ -1,7 +1,7 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { prisma } from "@/lib/prisma"
-import { getServerSession } from "next-auth"
+import { getServerSession } from "next-auth/next"
 import type { Session } from "next-auth"
 import { redirect } from "next/navigation"
 import LazyChart from "@/components/lazy-chart-area"

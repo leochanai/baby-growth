@@ -10,6 +10,7 @@ export const zhCN: MessageSchema = {
     current: "当前",
     save: "保存",
     saving: "保存中...",
+    ok: "确定",
     actions: "操作",
     openMenu: "打开菜单",
     edit: "编辑",

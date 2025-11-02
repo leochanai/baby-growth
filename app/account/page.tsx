@@ -16,7 +16,8 @@ export default async function AccountPage() {
   const session = (await getServerSession()) as Session | null
   if (!session?.user?.email) redirect("/login")
 
-  const lang = cookies().get("lang")?.value === "zh-CN" ? "zh-CN" : "en"
+  const cookieStore = await cookies()
+  const lang = cookieStore.get("lang")?.value === "zh-CN" ? "zh-CN" : "en"
   const dict = dictionaries[lang] ?? dictionaries["en"]
   return (
     <div className="content-x content-y">

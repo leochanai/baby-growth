@@ -181,10 +181,10 @@ export async function GET() {
   ])
 
   const date = new Date().toISOString().slice(0, 10)
-  return new Response(zipBytes, {
+  const blob = new Blob([zipBytes.buffer as ArrayBuffer], { type: "application/zip" })
+  return new Response(blob, {
     headers: {
       "Content-Type": "application/zip",
-      "Content-Length": String(zipBytes.byteLength),
       "Content-Disposition": `attachment; filename="baby-growth-export-${date}.zip"`,
     },
   })

@@ -7,7 +7,8 @@ import Link from "next/link"
 import { LoginForm } from "@/components/login-form"
 
 export async function generateMetadata(): Promise<Metadata> {
-  const lang = cookies().get("lang")?.value === "zh-CN" ? "zh-CN" : "en"
+  const cookieStore = await cookies()
+  const lang = cookieStore.get("lang")?.value === "zh-CN" ? "zh-CN" : "en"
   const dict = dictionaries[lang] ?? dictionaries["en"]
   const app = dict.common.appName
   return {
@@ -16,8 +17,9 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default function LoginPage() {
-  const lang = cookies().get("lang")?.value === "zh-CN" ? "zh-CN" : "en"
+export default async function LoginPage() {
+  const cookieStore = await cookies()
+  const lang = cookieStore.get("lang")?.value === "zh-CN" ? "zh-CN" : "en"
   const dict = dictionaries[lang] ?? dictionaries["en"]
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 content-x content-y">

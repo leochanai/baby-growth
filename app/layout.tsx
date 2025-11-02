@@ -60,7 +60,8 @@ export default async function RootLayout({
     "theme-yellow",
     "theme-violet",
   ]);
-  const initialPalette = userPalette || (ALLOWED_PALETTES.has(savedPalette ?? "") ? savedPalette : "theme-default");
+  const safeSavedPalette = ALLOWED_PALETTES.has(savedPalette ?? "") ? (savedPalette as string) : "theme-default"
+  const initialPalette: string = userPalette ?? safeSavedPalette
   
   const savedLanguage = cookieStore.get("lang")?.value;
   const initialLanguage = userLanguage || (savedLanguage === "zh-CN" ? "zh-CN" : "en");

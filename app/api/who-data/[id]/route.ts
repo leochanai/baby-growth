@@ -13,11 +13,12 @@ const updateSchema = z.object({
   weightMedianKg: z.coerce.number().positive().optional(),
 })
 
-export async function PATCH(req: Request, ctx: { params: { id: string } }) {
+export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
   const session = (await getServerSession()) as Session | null
   if (!session?.user?.email) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  const id = Number(ctx.params.id)
+  const { id: idStr } = await ctx.params
+  const id = Number(idStr)
   if (!Number.isInteger(id)) return NextResponse.json({ error: "Invalid id" }, { status: 400 })
 
   const payload = await req.json().catch(() => null)

@@ -230,6 +230,6 @@ export const en = {
       desc: "Mode: {mode}. Babies +{bCreated} (removed {bRemoved}). Records +{dCreated}/updated {dUpdated}/skipped {dSkipped}.",
     },
   },
-} as const
+}
 
 export type MessageSchema = typeof en

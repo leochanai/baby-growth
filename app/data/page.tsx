@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma"
-import { getServerSession } from "next-auth"
+import { getServerSession } from "next-auth/next"
 import type { Session } from "next-auth"
 import { redirect } from "next/navigation"
 import { BabyDataTable } from "@/components/baby-data-table"
