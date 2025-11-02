@@ -86,6 +86,14 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
     return groupBabies.filter((b) => set.has(b.id))
   }, [groupBabies, selectedIds])
 
+  // Accessible label for the chart container
+  const a11yLabel = React.useMemo(() => {
+    const title = metric === "height" ? t("charts.heightByAgeTitle") : t("charts.weightByAgeTitle")
+    const sexLabel = sex === "all" ? t("charts.filters.all") : sex === "MALE" ? t("charts.filters.boys") : t("charts.filters.girls")
+    const count = visibleBabies.length
+    return `${title} — ${sexLabel} — ${count} series`
+  }, [metric, sex, visibleBabies.length, t])
+
   // Build pivoted dataset: one series per visible baby key
   const { pivot, config, minDomain, maxDomain, ticks, yMin, yMax } = React.useMemo(() => {
     const cfg: ChartConfig = {}
@@ -377,10 +385,10 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="rounded-xl">
-              <DropdownMenuItem onClick={exportPNG} className="gap-2">
+              <DropdownMenuItem onClick={exportPNG} className="gap-2" aria-label={t("charts.export.png")}>
                 <ImageDown className="size-4" /> {t("charts.export.png")}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={exportSVG} className="gap-2">
+              <DropdownMenuItem onClick={exportSVG} className="gap-2" aria-label={t("charts.export.svg")}>
                 <FileDown className="size-4" /> {t("charts.export.svg")}
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -389,7 +397,12 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6 flex flex-1 min-h-0 flex-col">
         <div ref={chartRef} className="min-h-0 flex-1">
-          <ChartContainer config={config} className="aspect-auto h-full w-full">
+          <ChartContainer
+            role="img"
+            aria-label={a11yLabel}
+            config={config}
+            className="aspect-auto h-full w-full"
+          >
             <LineChart data={pivot}>
               <CartesianGrid vertical={false} />
               <XAxis
@@ -492,14 +505,28 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
         {/* Names checklist */}
         <div className="mt-4 flex flex-col gap-3">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Button size="sm" variant="outline" onClick={() => setSelectedIds(allIdsOfGroup)} disabled={allSelected}>
+            <Button
+              size="sm"
+              variant="outline"
+              aria-controls="chart-legend-list"
+              aria-label={t("charts.legend.selectAll")}
+              onClick={() => setSelectedIds(allIdsOfGroup)}
+              disabled={allSelected}
+            >
               {t("charts.legend.selectAll")}
             </Button>
-            <Button size="sm" variant="outline" onClick={() => setSelectedIds([])} disabled={noneSelected}>
+            <Button
+              size="sm"
+              variant="outline"
+              aria-controls="chart-legend-list"
+              aria-label={t("charts.legend.clear")}
+              onClick={() => setSelectedIds([])}
+              disabled={noneSelected}
+            >
               {t("charts.legend.clear")}
             </Button>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+          <div id="chart-legend-list" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
             {groupBabies.map((b) => {
               const checked = selectedIds.includes(b.id)
               const idx = babies.findIndex((g) => g.id === b.id)

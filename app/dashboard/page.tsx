@@ -1,10 +1,10 @@
 import { AppSidebar } from "@/components/app-sidebar"
-import { ChartAreaInteractive } from "@/components/chart-area-interactive"
 import { SiteHeader } from "@/components/site-header"
 import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import type { Session } from "next-auth"
 import { redirect } from "next/navigation"
+import LazyChart from "@/components/lazy-chart-area"
 import {
   SidebarInset,
   SidebarProvider,
@@ -45,7 +45,7 @@ export default async function Page() {
           <div className="@container/main flex flex-1 flex-col">
             <div className="content-y stack-y flex flex-1 flex-col">
               <div className="content-x flex-1">
-                <ChartAreaInteractive babies={babies} data={data} />
+                <LazyChart babies={babies} data={data} />
               </div>
             </div>
           </div>

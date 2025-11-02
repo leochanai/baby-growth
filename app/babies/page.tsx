@@ -16,7 +16,7 @@ export default async function BabiesPage() {
   })
   const initial = babies.map((b) => ({ ...b, birthDate: b.birthDate.toISOString() }))
   return (
-    <div className="content-y">
+    <div className="content-x content-y">
       <BabiesTable initial={initial} />
     </div>
   )

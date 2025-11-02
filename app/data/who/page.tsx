@@ -21,7 +21,7 @@ export default async function WHOPage() {
       <SiteHeader titleKey="nav.who" />
       <div className="flex flex-1 flex-col">
         <div className="@container/main flex flex-1 flex-col">
-          <div className="content-y stack-y flex flex-col">
+          <div className="content-x content-y stack-y flex flex-col">
             <WhoDataTable initial={whoItems} />
           </div>
         </div>

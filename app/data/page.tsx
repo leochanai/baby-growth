@@ -29,7 +29,7 @@ export default async function DataPage() {
       <SiteHeader titleKey="nav.analytics" />
       <div className="flex flex-1 flex-col">
         <div className="@container/main flex flex-1 flex-col">
-          <div className="content-y stack-y flex flex-col">
+          <div className="content-x content-y stack-y flex flex-col">
             <BabyDataTable initial={data} babies={babies} />
           </div>
         </div>
