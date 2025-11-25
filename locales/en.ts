@@ -160,6 +160,7 @@ export const en = {
       gender: "Gender",
       birthDate: "Date of Birth",
       monthAge: "Month Age",
+      color: "Display Color",
     },
     form: {
       invalid: "Please complete the form correctly.",

@@ -162,6 +162,7 @@ export const zhCN: MessageSchema = {
       gender: "性别",
       birthDate: "出生日期",
       monthAge: "月龄",
+      color: "代表色",
     },
     form: {
       invalid: "请正确填写表单",

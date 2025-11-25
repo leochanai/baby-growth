@@ -17,7 +17,19 @@ const formSchema = z.object({
   name: z.string().trim().min(1).max(50),
   gender: z.enum(["MALE", "FEMALE"]),
   birthDate: z.string().min(1), // YYYY-MM-DD
+  color: z.string().optional(),
 })
+
+const PRESET_COLORS = [
+  "hsl(15, 50%, 45%)",  // Terracotta
+  "hsl(150, 50%, 45%)", // Sage
+  "hsl(45, 50%, 45%)",  // Gold
+  "hsl(215, 50%, 45%)", // Navy
+  "hsl(330, 50%, 45%)", // Rose
+  "hsl(200, 50%, 45%)", // Charcoal
+  "hsl(25, 50%, 45%)",  // Burnt Orange
+  "hsl(190, 50%, 45%)", // Slate
+]
 
 export type BabyFormValue = z.infer<typeof formSchema>
 
@@ -39,6 +51,7 @@ export function BabyForm({
     name: initial?.name ?? "",
     gender: (initial?.gender as any) ?? "MALE",
     birthDate: initial?.birthDate ?? "",
+    color: initial?.color ?? PRESET_COLORS[Math.floor(Math.random() * PRESET_COLORS.length)],
   })
   const [error, setError] = React.useState<string | null>(null)
   const [open, setOpen] = React.useState(false)
@@ -116,6 +129,24 @@ export function BabyForm({
             />
           </PopoverContent>
         </Popover>
+      </div>
+      <div className="grid gap-2">
+        <Label>{t("babies.fields.color")}</Label>
+        <div className="flex flex-wrap gap-3">
+          {PRESET_COLORS.map((c) => (
+            <button
+              key={c}
+              type="button"
+              className={cn(
+                "h-8 w-8 rounded-full border transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+                form.color === c ? "ring-2 ring-ring ring-offset-2 scale-110" : "border-transparent"
+              )}
+              style={{ backgroundColor: c }}
+              onClick={() => setForm({ ...form, color: c })}
+              aria-label={`Select color ${c}`}
+            />
+          ))}
+        </div>
       </div>
       {error && (
         <div className="text-destructive text-sm">{error}</div>

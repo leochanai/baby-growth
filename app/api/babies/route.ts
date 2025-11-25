@@ -12,6 +12,7 @@ const createSchema = z.object({
   birthDate: z.string().refine((v) => !Number.isNaN(Date.parse(v)), {
     message: "Invalid date",
   }),
+  color: z.string().optional(),
 })
 
 export async function GET() {
@@ -22,7 +23,7 @@ export async function GET() {
   const babies = await prisma.baby.findMany({
     where: { userId: user.id },
     orderBy: { createdAt: "desc" },
-    select: { id: true, name: true, gender: true, birthDate: true, createdAt: true, updatedAt: true },
+    select: { id: true, name: true, gender: true, birthDate: true, color: true, createdAt: true, updatedAt: true },
   })
   return NextResponse.json(babies)
 }
@@ -43,8 +44,9 @@ export async function POST(req: Request) {
       name: parsed.data.name,
       gender: parsed.data.gender as any,
       birthDate: new Date(parsed.data.birthDate),
+      color: parsed.data.color,
     },
-    select: { id: true, name: true, gender: true, birthDate: true, createdAt: true, updatedAt: true },
+    select: { id: true, name: true, gender: true, birthDate: true, color: true, createdAt: true, updatedAt: true },
   })
   return NextResponse.json(created, { status: 201 })
 }

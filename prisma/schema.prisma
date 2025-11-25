@@ -29,6 +29,7 @@ model Baby {
   name      String
   gender    String
   birthDate DateTime
+  color     String?  // CSS color string, e.g. "hsl(15, 50%, 45%)"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

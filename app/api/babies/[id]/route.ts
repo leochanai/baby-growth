@@ -13,6 +13,7 @@ const updateSchema = z.object({
     .string()
     .optional()
     .refine((v) => v === undefined || !Number.isNaN(Date.parse(v)), { message: "Invalid date" }),
+  color: z.string().optional(),
 })
 
 export async function PATCH(_req: Request, ctx: { params: Promise<{ id: string }> }) {
@@ -32,13 +33,14 @@ export async function PATCH(_req: Request, ctx: { params: Promise<{ id: string }
   if (parsed.data.name !== undefined) data.name = parsed.data.name
   if (parsed.data.gender !== undefined) data.gender = parsed.data.gender
   if (parsed.data.birthDate !== undefined) data.birthDate = new Date(parsed.data.birthDate)
+  if (parsed.data.color !== undefined) data.color = parsed.data.color
 
   const ok = await prisma.baby.findFirst({ where: { id, userId: user.id }, select: { id: true } })
   if (!ok) return NextResponse.json({ error: "Not found" }, { status: 404 })
   const updated = await prisma.baby.update({
     where: { id },
     data,
-    select: { id: true, name: true, gender: true, birthDate: true, createdAt: true, updatedAt: true },
+    select: { id: true, name: true, gender: true, birthDate: true, color: true, createdAt: true, updatedAt: true },
   }).catch(() => null)
   if (!updated) return NextResponse.json({ error: "Not found" }, { status: 404 })
   return NextResponse.json(updated)
