@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, Manrope } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Toaster } from "@/components/ui/sonner";
@@ -9,13 +9,14 @@ import { getServerSession } from "next-auth/next";
 import type { Session } from "next-auth";
 import { prisma } from "@/lib/prisma";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const fraunces = Fraunces({
+  variable: "--font-serif",
   subsets: ["latin"],
+  axes: ["SOFT", "WONK", "opsz"], // Utilize variable axes for personality
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const manrope = Manrope({
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
@@ -51,17 +52,9 @@ export default async function RootLayout({
   
   // 如果没有数据库设置，则从cookie读取
   const savedPalette = cookieStore.get("palette")?.value;
-  const ALLOWED_PALETTES = new Set([
-    "theme-default",
-    "theme-red",
-    "theme-orange",
-    "theme-green",
-    "theme-blue",
-    "theme-yellow",
-    "theme-violet",
-  ]);
-  const safeSavedPalette = ALLOWED_PALETTES.has(savedPalette ?? "") ? (savedPalette as string) : "theme-default"
-  const initialPalette: string = userPalette ?? safeSavedPalette
+  // New design replaces the palette system with a single strong theme, 
+  // but we keep logic for backward compatibility or future multi-theme support
+  const initialPalette: string = "theme-editorial"; // Force new theme
   
   const savedLanguage = cookieStore.get("lang")?.value;
   const initialLanguage = userLanguage || (savedLanguage === "zh-CN" ? "zh-CN" : "en");
@@ -70,7 +63,7 @@ export default async function RootLayout({
   // 注意：theme模式不在html标签上设置，而是在ThemeProvider中处理
   return (
     <html lang={initialLanguage} suppressHydrationWarning className={initialPalette}>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${fraunces.variable} ${manrope.variable} font-sans antialiased`}>
         <Providers 
           initialPalette={initialPalette} 
           initialLanguage={initialLanguage as any} 

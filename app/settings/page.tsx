@@ -141,7 +141,7 @@ export default function SettingsPage() {
             <CardDescription>{t("settings.appearanceDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
-            <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2">
             <Label htmlFor="theme-mode">{t("settings.themeMode")}</Label>
             {mounted ? (
               <Select value={theme as string} onValueChange={handleThemeChange}>
@@ -156,21 +156,6 @@ export default function SettingsPage() {
               <div className="bg-muted/50 h-9 w-[220px] animate-pulse rounded-md" />
             )}
             <div className="text-muted-foreground text-xs">{t("common.current")}: {mounted ? t(`settings.mode.${resolvedTheme as "light" | "dark" | "system"}`) : "–"}</div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="palette">{t("settings.palette")}</Label>
-            {mounted ? (
-              <Select value={palette} onValueChange={handlePaletteChange}>
-                <SelectTrigger id="palette" className="w-[220px]"><SelectValue placeholder={t("settings.selectPalette")} /></SelectTrigger>
-                <SelectContent>
-                  {palettes.map((p) => (
-                    <SelectItem key={p.id} value={p.id}>{p.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            ) : (
-              <div className="bg-muted/50 h-9 w-[220px] animate-pulse rounded-md" />
-            )}
           </div>
           </CardContent>
         </Card>

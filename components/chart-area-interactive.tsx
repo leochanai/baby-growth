@@ -97,14 +97,16 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
   // Build pivoted dataset: one series per visible baby key
   const { pivot, config, minDomain, maxDomain, ticks, yMin, yMax } = React.useMemo(() => {
     const cfg: ChartConfig = {}
-    const colorPool = [210, 340, 25, 270, 140, 0, 45, 180]
+    // Editorial Palette Hues: Terracotta(15), Sage(150), Gold(45), Navy(215), Rose(330), Charcoal(200), Burnt Orange(25), Slate(190)
+    const colorPool = [15, 150, 45, 215, 330, 200, 25, 190]
     const byBaby = new Map<number, string>()
     visibleBabies.forEach((b) => {
       const key = `b${b.id}`
       byBaby.set(b.id, key)
       const idx = babies.findIndex((g) => g.id === b.id)
       const hue = colorPool[(idx >= 0 ? idx : 0) % colorPool.length]
-      cfg[key] = { label: b.name, color: `hsl(${hue}, 70%, 50%)` }
+      // Lower saturation and lightness for a more "ink-like" feel
+      cfg[key] = { label: b.name, color: `hsl(${hue}, 50%, 45%)` }
     })
 
     // collect all months present in selected babies
@@ -116,8 +118,8 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
     // WHO series should appear only on months that exist in baby data
     const monthsSet = new Set<number>(babyMonthsSet)
     if (who && (sex === "MALE" || sex === "FEMALE") && babyMonthsSet.size > 0) {
-      // configure WHO series (green)
-      cfg["WHO"] = { label: "WHO", color: "hsl(145, 65%, 42%)" }
+      // configure WHO series (Slate Grey for reference)
+      cfg["WHO"] = { label: "WHO", color: "hsl(200, 10%, 40%)" }
     }
     const months = Array.from(monthsSet).sort((a, b) => a - b)
     const babyMonths = Array.from(babyMonthsSet).sort((a, b) => a - b)
@@ -530,10 +532,11 @@ export function ChartAreaInteractive({ babies, data, metric: metricProp = "heigh
             {groupBabies.map((b) => {
               const checked = selectedIds.includes(b.id)
               const idx = babies.findIndex((g) => g.id === b.id)
-              const colorH = [210, 340, 25, 270, 140, 0, 45, 180][(idx >= 0 ? idx : 0) % 8]
+              const colorPool = [15, 150, 45, 215, 330, 200, 25, 190]
+              const colorH = colorPool[(idx >= 0 ? idx : 0) % colorPool.length]
               return (
                 <label key={b.id} className="border-input hover:bg-accent/40 focus-within:ring-ring/50 flex items-center gap-2 rounded-md border p-2 text-sm outline-none transition-[color,box-shadow]">
-                  <span className="h-3 w-3 shrink-0 rounded-[2px]" style={{ backgroundColor: `hsl(${colorH}, 70%, 50%)` }} />
+                  <span className="h-3 w-3 shrink-0 rounded-[2px]" style={{ backgroundColor: `hsl(${colorH}, 50%, 45%)` }} />
                   <span className="flex-1 truncate" title={b.name}>{b.name}</span>
                   <Checkbox checked={checked} onCheckedChange={(v) => {
                     const on = Boolean(v)
